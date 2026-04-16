@@ -1,0 +1,82 @@
+# Dependencies
+node_modules/
+.npm-cache/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+build/
+
+# IDEs & Agents (Crucial for this project)
+.claude/
+.continue/
+.cortex/
+.cursor/
+.factory/
+.goose/
+.openhands/
+.vibe/
+.windsurf/
+.kode/
+.junie/
+.mcpjam/
+.bob/
+.adal/
+.augment/
+.commandcode/
+.crush/
+.iflow/
+.kilocode/
+.kiro/
+.neovate/
+.pi/
+.pochi/
+.qoder/
+.qwen/
+.roo/
+.trae/
+.zencoder/
+.codebuddy/
+.agents/
+.qoder/
+.qwen/
+.roo/
+.trae/
+.zencoder/
+.codebuddy/
+.augment/
+.iflow/
+.kilocode/
+.kiro/
+.neovate/
+.pi/
+.pochi/
+.mux/
+
+# Environment
+.env
+.env.local
+.env.production
+.env.development
+*.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+
+# Build artifacts
+*.tsbuildinfo
+tsconfig.tsbuildinfo
