@@ -144,7 +144,7 @@ export function SavClient({ initialIncidents }: SavClientProps) {
           </div>
         ) : (
           filteredIncidents.map((incident) => {
-            const typeInfo = TYPE_CONFIG[incident.incident_type] || TYPE_CONFIG.AUTRE;
+            const typeInfo = TYPE_CONFIG[incident.incident_type as IncidentType] || TYPE_CONFIG.AUTRE;
             const TypeIcon = typeInfo.icon;
             const statusInfo = STATUS_CONFIG[incident.status as IncidentStatus];
 
