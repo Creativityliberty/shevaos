@@ -176,11 +176,11 @@ export function SavClient({ initialIncidents }: SavClientProps) {
                     <div className="p-4 bg-gray-50 rounded-2xl space-y-2">
                        <div className="flex items-center gap-2 text-sm">
                         <User className="w-4 h-4 text-gray-400" />
-                        <span className="font-bold text-gray-900">{inc.orders?.customer?.full_name}</span>
+                        <span className="font-bold text-gray-900">{incident.orders?.customer?.full_name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <MessageSquare className="w-4 h-4 text-gray-400" />
-                        <span className="font-medium text-gray-500">{inc.orders?.customer?.phone}</span>
+                        <span className="font-medium text-gray-500">{incident.orders?.customer?.phone}</span>
                       </div>
                     </div>
                   </div>

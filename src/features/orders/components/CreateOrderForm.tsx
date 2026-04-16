@@ -59,6 +59,8 @@ export function CreateOrderForm({ customers, products, zones }: CreateOrderFormP
       zone_id: "",
       delivery_address: "",
       delivery_fee: 0,
+      secondary_phone: "",
+      delivery_window: "MATIN",
       items: [{ product_id: "", quantity: 1, unit_price: 0 }],
     },
   });

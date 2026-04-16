@@ -18,7 +18,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "../../components/ui/skeleton";
 import { useAuth } from "@/core/auth/AuthProvider";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";

@@ -146,7 +146,7 @@ export function ExpenseClient({ initialExpenses }: Props) {
                        <label className="text-xs font-black uppercase text-gray-400 tracking-tighter text-left block w-full">Catégorie</label>
                        <Select 
                          value={formData.category} 
-                         onValueChange={(val: ExpenseCategory) => setFormData({...formData, category: val})}
+                         onValueChange={(val: any) => setFormData({...formData, category: val as ExpenseCategory})}
                          required
                        >
                          <SelectTrigger className="h-14 rounded-xl border-gray-100 bg-gray-50/50 font-bold">

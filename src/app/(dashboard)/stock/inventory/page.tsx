@@ -1,5 +1,5 @@
 import { getInventory } from "@/features/stock/actions/inventory-actions";
-import { InventoryClient } from "./InventoryClient";
+import { InventoryClient } from "@/app/(dashboard)/stock/inventory/InventoryClient";
 
 export const dynamic = "force-dynamic";
 

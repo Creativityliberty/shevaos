@@ -1,5 +1,5 @@
 import { getContracts, getRecentPayrolls } from "@/features/hr/actions/hr-actions";
-import { HrClient } from "./HrClient";
+import { HrClient } from "@/app/(dashboard)/admin/hr/HrClient";
 
 export const dynamic = "force-dynamic";
 

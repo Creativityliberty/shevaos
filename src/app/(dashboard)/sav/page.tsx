@@ -1,5 +1,5 @@
 import { getIncidents } from "@/features/sav/actions/incident-actions";
-import { SavClient } from "./SavClient";
+import { SavClient } from "@/app/(dashboard)/sav/SavClient";
 
 export const dynamic = "force-dynamic";
 

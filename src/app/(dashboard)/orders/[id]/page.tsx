@@ -18,7 +18,8 @@ import {
   Smartphone,
   Navigation,
   ExternalLink,
-  AlertTriangle
+  AlertTriangle,
+  Package
 } from "lucide-react";
 import { CreateIncidentDialog } from "@/features/sav/components/CreateIncidentDialog";
 import Link from "next/link";
