@@ -21,7 +21,7 @@ export function useRealtimeAlerts() {
           schema: "public",
           table: "alerts",
         },
-        (payload) => {
+        (payload: any) => {
           const newAlert = payload.new;
           
           // Personnalisation du toast selon la sévérité et le type
