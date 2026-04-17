@@ -97,9 +97,14 @@ const NAV_ITEMS: NavItem[] = [
   },
   { 
     label: "Marketing", 
-    href: "/ads", 
+    href: "/marketing/accounts", 
     icon: Megaphone, 
-    roles: ["ceo", "ads_manager", "super_admin"] 
+    roles: ["ceo", "ads_manager", "super_admin"],
+    children: [
+      { label: "Comptes Clients", href: "/marketing/accounts" },
+      { label: "Liste des Campagnes", href: "/marketing/campaigns" },
+      { label: "Journal Dépenses", href: "/marketing/spend" },
+    ]
   },
   { 
     label: "Équipe & RH", 
