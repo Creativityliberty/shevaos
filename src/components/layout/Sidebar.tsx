@@ -53,6 +53,7 @@ const NAV_ITEMS: NavItem[] = [
     roles: ["ceo", "manager", "sav_agent", "sav_manager", "super_admin"],
     children: [
       { label: "Commandes", href: "/orders" },
+      { label: "Relances SAV (Radar)", href: "/sav/follow-ups" },
       { label: "Suivi SAV (Incidents)", href: "/sav" },
       { label: "Clients (CRM)", href: "/customers" },
     ]
