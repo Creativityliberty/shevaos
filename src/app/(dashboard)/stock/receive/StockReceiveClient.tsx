@@ -151,7 +151,7 @@ export function StockReceiveClient({ products, hubs }: Props) {
                             <SelectValue placeholder="Rechercher un produit..." />
                           </SelectTrigger>
                           <SelectContent className="rounded-xl border-gray-100 max-h-64">
-                            {products.map((p) => (
+                            {products.map((p: any) => (
                               <SelectItem key={p.id} value={p.id}>{p.name} ({p.sku})</SelectItem>
                             ))}
                           </SelectContent>

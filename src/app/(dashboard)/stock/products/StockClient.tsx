@@ -30,7 +30,7 @@ export function StockClient({ products }: { products: any[] }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((p) => {
+            {products.map((p: any) => {
               const isCrit = p.available_stock <= p.min_stock_level && p.available_stock > 0;
               const isZero = p.available_stock <= 0;
               

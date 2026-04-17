@@ -140,7 +140,7 @@ export function UserListClient({ initialUsers }: Props) {
                 <div className="space-y-4">
                    <div className="space-y-1">
                       <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest leading-none">Rôle Actuel</p>
-                      <Select value={user.role} onValueChange={(val) => onRoleChange(user.id, val)}>
+                      <Select value={user.role} onValueChange={(val: any) => onRoleChange(user.id, val)}>
                          <SelectTrigger className={cn("rounded-2xl h-12 border-none font-black text-xs uppercase px-4 shadow-none focus:ring-0", config.bg, config.color)}>
                             <SelectValue />
                          </SelectTrigger>

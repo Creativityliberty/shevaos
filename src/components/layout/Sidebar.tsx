@@ -238,7 +238,7 @@ export function Sidebar() {
         "flex-1 px-4 space-y-1 overflow-y-auto no-scrollbar",
         isCollapsed && "px-3"
       )}>
-          {allowedItems.map((item) => {
+          {allowedItems.map((item: any) => {
             const Icon = item.icon;
             const isActive = pathname === item.href || (item.children?.some(child => child.href === pathname));
             const isSubmenuOpen = openSubmenu === item.label;

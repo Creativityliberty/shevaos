@@ -450,7 +450,7 @@ export function CreateOrderForm({ customers, products, zones }: CreateOrderFormP
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent className="rounded-xl border-gray-100">
-                                {products.map((p) => (
+                                {products.map((p: any) => (
                                   <SelectItem key={p.id} value={p.id} className="rounded-lg">
                                     {p.name} ({p.sku}) — {p.unit_price.toLocaleString()} F
                                   </SelectItem>

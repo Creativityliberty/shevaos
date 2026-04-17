@@ -30,7 +30,7 @@ export function FollowUpClient({ initialFollowUps }: Props) {
   const [followUps, setFollowUps] = useState(initialFollowUps);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filtered = followUps.filter(f => 
+  const filtered = followUps.filter((f: any) => 
     f.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     f.order_number.toLowerCase().includes(searchTerm.toLowerCase())
   );

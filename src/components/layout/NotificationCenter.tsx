@@ -111,7 +111,7 @@ export function NotificationCenter() {
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Aucune notification</p>
             </div>
           ) : (
-            notifications.map((n) => (
+            notifications.map((n: any) => (
               <DropdownMenuItem key={n.id} className="p-4 rounded-xl cursor-default focus:bg-gray-50/50">
                 <div className="flex gap-4">
                   <div className="mt-1">

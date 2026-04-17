@@ -184,7 +184,7 @@ export function CatalogClient({ initialProducts }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.map((p) => (
+            {filtered.map((p: any) => (
               <TableRow key={p.id} className="hover:bg-gray-50/30 border-gray-50 transition-colors">
                 <TableCell className="py-8 pl-10">
                    <div className="flex items-center gap-4">

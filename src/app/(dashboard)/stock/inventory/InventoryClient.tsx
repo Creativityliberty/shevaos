@@ -196,7 +196,7 @@ export function InventoryClient({ initialInventory }: Props) {
 
       {/* Inventory Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredInventory.map((item) => {
+        {filteredInventory.map((item: any) => {
           const isCritical = item.available_stock <= (item.products?.alert_threshold || 5);
           const isRupture = item.available_stock === 0;
 

@@ -105,7 +105,7 @@ export function SearchCommand() {
 
           {results.orders.length > 0 && (
             <CommandGroup heading="Commandes">
-              {results.orders.map((order) => (
+              {results.orders.map((order: any) => (
                 <CommandItem
                   key={order.id}
                   onSelect={() => runCommand(() => router.push(`/orders/${order.id}`))}
