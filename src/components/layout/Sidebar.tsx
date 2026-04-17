@@ -96,7 +96,7 @@ const NAV_ITEMS: NavItem[] = [
     label: "Logistique", 
     href: "/dispatch", 
     icon: Truck, 
-    roles: ["ceo", "manager", "dispatcher", "ops_manager", "achats", "super_admin"],
+    roles: ["ceo", "manager", "dispatcher", "ops_manager", "achats", "stock_manager", "super_admin"],
     children: [
       { label: "Suivi Livraisons (Dispatch)", href: "/dispatch" },
       { label: "Gestion Fournisseurs", href: "/logistique/fournisseurs" },
@@ -118,7 +118,7 @@ const NAV_ITEMS: NavItem[] = [
     label: "Équipe & RH", 
     href: "/admin/hr", 
     icon: Users, 
-    roles: ["ceo", "super_admin"],
+    roles: ["ceo", "manager", "super_admin"],
     children: [
       { label: "L'Équipe & Paie", href: "/hr" },
       { label: "Utilisateurs Système", href: "/admin/users" }
@@ -128,7 +128,7 @@ const NAV_ITEMS: NavItem[] = [
     label: "Paramètres", 
     href: "/settings/zones", 
     icon: Settings, 
-    roles: ["ceo", "super_admin"],
+    roles: ["ceo", "manager", "super_admin"],
     children: [
       { label: "Zones & Tarifs", href: "/settings/zones" },
       { label: "Profil Utilisateur", href: "/settings" },
