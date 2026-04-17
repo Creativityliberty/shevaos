@@ -105,7 +105,7 @@ export default function OrdersPage() {
       
       const ordersWithScoring = data?.map((order: any) => ({
         ...order,
-        customer_scoring: scores?.find(s => s.customer_id === order.customer_id)
+        customer_scoring: scores?.find((s: any) => s.customer_id === order.customer_id)
       })) || [];
 
       if (error) throw error;
@@ -261,7 +261,7 @@ export default function OrdersPage() {
               placeholder="Rechercher par n° de commande, client, téléphone, zone..."
               className="pl-10 rounded-2xl border-gray-200 h-11 focus:ring-primary focus:border-primary"
               value={filters.search}
-              onChange={(e) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setFilters(prev => ({ ...prev, search: e.target.value }));
                 setCurrentPage(1);
               }}
@@ -311,7 +311,7 @@ export default function OrdersPage() {
                         <Checkbox
                           id={`status-${status}`}
                           checked={filters.status.includes(status)}
-                          onCheckedChange={(checked) => {
+                          onCheckedChange={(checked: boolean | "indeterminate") => {
                             setFilters(prev => ({
                               ...prev,
                               status: checked
@@ -339,7 +339,7 @@ export default function OrdersPage() {
                         type="number"
                         placeholder="0"
                         value={filters.minAmount ?? ""}
-                        onChange={(e) => {
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           const value = e.target.value ? Number(e.target.value) : null;
                           setFilters(prev => ({ ...prev, minAmount: value }));
                           setCurrentPage(1);
@@ -353,7 +353,7 @@ export default function OrdersPage() {
                         type="number"
                         placeholder="∞"
                         value={filters.maxAmount ?? ""}
-                        onChange={(e) => {
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           const value = e.target.value ? Number(e.target.value) : null;
                           setFilters(prev => ({ ...prev, maxAmount: value }));
                           setCurrentPage(1);
@@ -373,7 +373,7 @@ export default function OrdersPage() {
                       <Input
                         type="date"
                         value={filters.startDate ?? ""}
-                        onChange={(e) => {
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           setFilters(prev => ({ ...prev, startDate: e.target.value || null }));
                           setCurrentPage(1);
                         }}
@@ -385,7 +385,7 @@ export default function OrdersPage() {
                       <Input
                         type="date"
                         value={filters.endDate ?? ""}
-                        onChange={(e) => {
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           setFilters(prev => ({ ...prev, endDate: e.target.value || null }));
                           setCurrentPage(1);
                         }}
