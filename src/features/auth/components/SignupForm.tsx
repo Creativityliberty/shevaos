@@ -28,7 +28,7 @@ const signupSchema = z.object({
     role: z.string().min(2, { message: "Rôle requis" }),
     password: z.string().min(6, { message: "Minimum 6 caractères" }),
     confirmPassword: z.string().min(6, { message: "Minimum 6 caractères" }),
-}).refine((data) => data.password === data.confirmPassword, {
+}).refine((data: any) => data.password === data.confirmPassword, {
     message: "Les mots de passe ne correspondent pas",
     path: ["confirmPassword"],
 });

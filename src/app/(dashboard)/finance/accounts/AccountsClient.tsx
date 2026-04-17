@@ -63,7 +63,7 @@ export function AccountsClient({ initialAccounts, initialTransfers }: Props) {
     account_number: string;
     balance: number;
   }>({
-    resolver: zodResolver(accountSchema),
+    resolver: zodResolver(accountSchema) as any,
     defaultValues: { name: "", type: "CASH", account_number: "", balance: 0 }
   });
 
@@ -73,7 +73,7 @@ export function AccountsClient({ initialAccounts, initialTransfers }: Props) {
     amount: number;
     description: string;
   }>({
-    resolver: zodResolver(transferSchema),
+    resolver: zodResolver(transferSchema) as any,
     defaultValues: { from_account_id: "", to_account_id: "", amount: 0, description: "Transfert interne" }
   });
 

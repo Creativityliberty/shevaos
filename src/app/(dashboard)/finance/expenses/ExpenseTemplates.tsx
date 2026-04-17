@@ -152,7 +152,7 @@ export function ExpenseTemplates() {
                       placeholder="Ex: Loyer Mensuel, Fibre..." 
                       className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold px-6"
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, name: e.target.value})}
                       required
                     />
                  </div>
@@ -164,7 +164,7 @@ export function ExpenseTemplates() {
                           placeholder="0" 
                           className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-black text-primary px-6"
                           value={formData.amount}
-                          onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, amount: e.target.value})}
                           required
                         />
                     </div>
@@ -177,14 +177,14 @@ export function ExpenseTemplates() {
                           placeholder="1" 
                           className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold px-6 text-center"
                           value={formData.day_of_period}
-                          onChange={(e) => setFormData({...formData, day_of_period: e.target.value})}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, day_of_period: e.target.value})}
                           required
                         />
                     </div>
                  </div>
                  <div className="space-y-1.5">
                     <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest pl-2">Catégorie</label>
-                    <Select value={formData.category} onValueChange={(val) => setFormData({...formData, category: val})}>
+                    <Select value={formData.category} onValueChange={(val: string) => setFormData({...formData, category: val})}>
                        <SelectTrigger className="h-14 rounded-2xl bg-gray-50/50 border-gray-100 font-bold px-6">
                           <SelectValue placeholder="Choisir..." />
                        </SelectTrigger>

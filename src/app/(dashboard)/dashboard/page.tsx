@@ -38,7 +38,7 @@ export default async function CeoDashboard() {
     roas: 0
   };
 
-  const lowStockCount = products?.filter(p => p.available_stock <= p.min_stock_level).length || 0;
+  const lowStockCount = products?.filter((p: any) => p.available_stock <= p.min_stock_level).length || 0;
 
   return (
     <div className="max-w-7xl mx-auto space-y-10">
