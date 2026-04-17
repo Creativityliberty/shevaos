@@ -1,21 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { 
   Building2, 
   Plus, 
   Search, 
   Globe, 
-  TrendingDown, 
-  TrendingUp,
-  MoreVertical,
   Banknote,
   Truck,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Mail,
+  Phone
 } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -34,6 +33,10 @@ export function FournisseursClient({ initialSuppliers }: { initialSuppliers: any
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Pour la création de Fournisseur
+  const [isNewSupOpen, setIsNewSupOpen] = useState(false);
+  const [newSupData, setNewSupData] = useState({ name: "", email: "", phone: "", country: "Chine" });
+
   // Pour la création de CMD
   const [selectedSupplier, setSelectedSupplier] = useState<any>(null);
   const [cmdAmount, setCmdAmount] = useState("");
@@ -44,16 +47,48 @@ export function FournisseursClient({ initialSuppliers }: { initialSuppliers: any
     s.country?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleCreateSupplier = async () => {
+    if (!newSupData.name) return;
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("suppliers")
+        .insert(newSupData)
+        .select()
+        .single();
+
+      if (error) throw error;
+      setSuppliers([data, ...suppliers]);
+      setIsNewSupOpen(false);
+      setNewSupData({ name: "", email: "", phone: "", country: "Chine" });
+      toast.success("Nouveau fournisseur référencé !");
+    } catch (error: any) {
+      toast.error("Erreur : " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCreateCMD = async () => {
     if (!selectedSupplier || !cmdAmount) return;
     setLoading(true);
     try {
-      // Simulation d'insertion CMD (Process 2-3.1)
+      const { error } = await supabase
+        .from("supplier_orders")
+        .insert({
+          supplier_id: selectedSupplier.id,
+          total_amount_currency: Number(cmdAmount),
+          currency: cmdCurrency,
+          order_reference: `CMD-${Date.now().toString().slice(-6)}`,
+          status: 'EN_TRANSIT'
+        });
+
+      if (error) throw error;
       toast.success(`CMD de ${cmdAmount} ${cmdCurrency} créée pour ${selectedSupplier.name}`);
       setSelectedSupplier(null);
       setCmdAmount("");
     } catch (error: any) {
-      toast.error("Erreur de création");
+      toast.error("Erreur : " + error.message);
     } finally {
       setLoading(false);
     }
@@ -73,15 +108,44 @@ export function FournisseursClient({ initialSuppliers }: { initialSuppliers: any
           </div>
         </div>
 
-        <div className="flex gap-4">
-           <Button className="h-16 px-8 rounded-3xl bg-gray-900 hover:bg-black font-black uppercase text-xs tracking-widest gap-2">
-             <Plus className="w-5 h-5 text-indigo-400" /> NOUVEAU PARTENAIRE
-           </Button>
-        </div>
+        <Dialog open={isNewSupOpen} onOpenChange={setIsNewSupOpen}>
+           <DialogTrigger 
+             render={
+               <Button className="h-16 px-8 rounded-3xl bg-gray-900 hover:bg-black font-black uppercase text-xs tracking-widest gap-2">
+                 <Plus className="w-5 h-5 text-indigo-400" /> NOUVEAU PARTENAIRE
+               </Button>
+             }
+           />
+           <DialogContent className="rounded-[2.5rem] border-none p-10 max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-black uppercase text-left italic">Référencer un <span className="text-primary">Partenaire</span></DialogTitle>
+              </DialogHeader>
+              <div className="space-y-6 pt-6 text-left">
+                 <div className="grid grid-cols-1 gap-4 font-bold">
+                    <div className="space-y-2">
+                       <label className="text-[10px] uppercase text-gray-400 font-black tracking-widest">Nom de l'Entité</label>
+                       <Input className="h-14 rounded-2xl bg-gray-50 border-none" placeholder="Ex: Guangzhou Log..." value={newSupData.name} onChange={e => setNewSupData({...newSupData, name: e.target.value})}/>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                       <div className="space-y-2">
+                          <label className="text-[10px] uppercase text-gray-400 font-black tracking-widest">Pays</label>
+                          <Input className="h-14 rounded-2xl bg-gray-50 border-none" placeholder="Chine" value={newSupData.country} onChange={e => setNewSupData({...newSupData, country: e.target.value})}/>
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-[10px] uppercase text-gray-400 font-black tracking-widest">Téléphone</label>
+                          <Input className="h-14 rounded-2xl bg-gray-50 border-none" placeholder="+86..." value={newSupData.phone} onChange={e => setNewSupData({...newSupData, phone: e.target.value})}/>
+                       </div>
+                    </div>
+                 </div>
+                 <Button onClick={handleCreateSupplier} disabled={loading} className="w-full h-16 rounded-2xl bg-primary text-black font-black text-lg shadow-xl shadow-orange-100">
+                   {loading ? <Loader2 className="animate-spin" /> : "ENREGISTRER LE PARTENAIRE"}
+                 </Button>
+              </div>
+           </DialogContent>
+        </Dialog>
       </div>
 
-      {/* Barre de recherche style Premium */}
-      <div className="flex items-center gap-4 bg-white p-4 rounded-[2rem] border border-gray-100 shadow-sm transition-all focus-within:shadow-indigo-100 focus-within:border-indigo-200">
+      <div className="flex items-center gap-4 bg-white p-4 rounded-[2rem] border border-gray-100 shadow-sm">
          <Search className="w-6 h-6 text-gray-400 ml-4" />
          <Input 
            placeholder="Rechercher par nom, pays ou catégorie..." 
@@ -91,7 +155,6 @@ export function FournisseursClient({ initialSuppliers }: { initialSuppliers: any
          />
       </div>
 
-      {/* Grille des Fournisseurs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredSuppliers.map((supplier: any) => (
           <Card key={supplier.id} className="rounded-[3rem] border-none shadow-xl shadow-gray-100/30 overflow-hidden bg-white flex flex-col group hover:translate-y-[-8px] transition-all duration-500">
@@ -120,22 +183,24 @@ export function FournisseursClient({ initialSuppliers }: { initialSuppliers: any
                     </p>
                   </div>
                   <div className="space-y-1 text-right">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">CMD en cours</p>
-                    <p className="text-lg font-black text-gray-900">0</p>
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">WhatsApp</p>
+                    <p className="text-xs font-black text-gray-900 truncate">{supplier.phone || '-'}</p>
                   </div>
                </div>
             </div>
 
             <div className="p-8 bg-gray-50/50 flex gap-3">
                <Dialog>
-                 <DialogTrigger asChild>
-                   <Button 
-                    onClick={() => setSelectedSupplier(supplier)}
-                    className="flex-1 h-14 rounded-2xl bg-gray-900 hover:bg-black font-black text-xs uppercase tracking-widest gap-2 shadow-lg"
-                   >
-                     <Plus className="w-4 h-4" /> CMD
-                   </Button>
-                 </DialogTrigger>
+                 <DialogTrigger 
+                    render={
+                      <Button 
+                        onClick={() => setSelectedSupplier(supplier)}
+                        className="flex-1 h-14 rounded-2xl bg-gray-900 hover:bg-black font-black text-xs uppercase tracking-widest gap-2 shadow-lg"
+                      >
+                        <Plus className="w-4 h-4" /> CMD
+                      </Button>
+                    }
+                 />
                  <DialogContent className="rounded-[2.5rem] border-none p-10 max-w-lg">
                     <DialogHeader>
                       <DialogTitle className="text-2xl font-black uppercase text-left">Nouvelle <span className="text-primary">Commande (CMD)</span></DialogTitle>
@@ -166,7 +231,7 @@ export function FournisseursClient({ initialSuppliers }: { initialSuppliers: any
                        <div className="p-6 bg-indigo-50 rounded-2xl border border-indigo-100 flex items-start gap-4">
                           <AlertCircle className="w-6 h-6 text-indigo-500 shrink-0 mt-1" />
                           <p className="text-xs text-indigo-800 leading-relaxed font-medium">
-                            Cette commande sera enregistrée au cours du jour et impactera la balance de <span className="font-black underline">{selectedSupplier?.name}</span> une fois confirmée.
+                            Cette commande sera enregistrée au cours du jour et impactera la balance de <span className="font-black underline">{selectedSupplier?.name}</span>.
                           </p>
                        </div>
 
