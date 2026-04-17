@@ -57,12 +57,22 @@ export function AccountsClient({ initialAccounts, initialTransfers }: Props) {
   const [isAddAccountOpen, setIsAddAccountOpen] = useState(false);
   const [isSubmittingTransfer, setIsSubmittingTransfer] = useState(false);
 
-  const accountForm = useForm<z.infer<typeof accountSchema>>({
+  const accountForm = useForm<{
+    name: string;
+    type: 'OM' | 'WAVE' | 'CASH' | 'BANC';
+    account_number: string;
+    balance: number;
+  }>({
     resolver: zodResolver(accountSchema),
     defaultValues: { name: "", type: "CASH", account_number: "", balance: 0 }
   });
 
-  const transferForm = useForm<z.infer<typeof transferSchema>>({
+  const transferForm = useForm<{
+    from_account_id: string;
+    to_account_id: string;
+    amount: number;
+    description: string;
+  }>({
     resolver: zodResolver(transferSchema),
     defaultValues: { from_account_id: "", to_account_id: "", amount: 0, description: "Transfert interne" }
   });
