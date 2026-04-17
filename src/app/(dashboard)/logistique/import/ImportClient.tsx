@@ -83,7 +83,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
     'EN_STOCK': Package,
   };
 
-  const filteredImports = imports.filter(i => 
+  const filteredImports = imports.filter((i: any) => 
     i.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     i.tracking_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     i.suppliers?.name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -144,7 +144,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                           <SelectValue placeholder="Choisir..." />
                        </SelectTrigger>
                        <SelectContent className="rounded-2xl">
-                          {suppliers.map(s => <SelectItem key={s.id} value={s.id} className="font-bold">{s.name}</SelectItem>)}
+                          {suppliers.map((s: any) => <SelectItem key={s.id} value={s.id} className="font-bold">{s.name}</SelectItem>)}
                        </SelectContent>
                     </Select>
                   </div>
@@ -155,7 +155,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                           <SelectValue placeholder="Choisir..." />
                        </SelectTrigger>
                        <SelectContent className="rounded-2xl">
-                          {transitAgents.map(a => <SelectItem key={a.id} value={a.id} className="font-bold">{a.name}</SelectItem>)}
+                          {transitAgents.map((a: any) => <SelectItem key={a.id} value={a.id} className="font-bold">{a.name}</SelectItem>)}
                        </SelectContent>
                     </Select>
                   </div>
@@ -167,7 +167,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                     placeholder="Ex: 500 paires de chaussures Homme..." 
                     className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold"
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={(e: any) => setFormData({...formData, description: e.target.value})}
                     required
                   />
                </div>
@@ -180,7 +180,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                       placeholder="0" 
                       className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-black text-indigo-600"
                       value={formData.item_cost}
-                      onChange={(e) => setFormData({...formData, item_cost: e.target.value})}
+                      onChange={(e: any) => setFormData({...formData, item_cost: e.target.value})}
                       required
                     />
                   </div>
@@ -191,7 +191,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                       placeholder="0" 
                       className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold"
                       value={formData.freight_cost}
-                      onChange={(e) => setFormData({...formData, freight_cost: e.target.value})}
+                      onChange={(e: any) => setFormData({...formData, freight_cost: e.target.value})}
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -201,7 +201,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                       placeholder="0" 
                       className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold"
                       value={formData.customs_cost}
-                      onChange={(e) => setFormData({...formData, customs_cost: e.target.value})}
+                      onChange={(e: any) => setFormData({...formData, customs_cost: e.target.value})}
                     />
                   </div>
                </div>
@@ -213,7 +213,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                       placeholder="DHS1234567..." 
                       className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold"
                       value={formData.tracking_number}
-                      onChange={(e) => setFormData({...formData, tracking_number: e.target.value})}
+                      onChange={(e: any) => setFormData({...formData, tracking_number: e.target.value})}
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -222,7 +222,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                       type="date" 
                       className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold"
                       value={formData.eta}
-                      onChange={(e) => setFormData({...formData, eta: e.target.value})}
+                      onChange={(e: any) => setFormData({...formData, eta: e.target.value})}
                     />
                   </div>
                </div>
@@ -242,7 +242,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
              <Ship className="w-7 h-7" />
            </div>
            <div>
-             <div className="text-2xl font-black text-gray-900">{imports.filter(i => i.status === 'EN_MER').length}</div>
+            <div className="text-2xl font-black text-gray-900">{imports.filter((i: any) => i.status === 'EN_MER').length}</div>
              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">En Pleine Mer</div>
            </div>
         </Card>
@@ -251,7 +251,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
              <Anchor className="w-7 h-7" />
            </div>
            <div>
-             <div className="text-2xl font-black text-gray-900">{imports.filter(i => i.status === 'AU_PORT').length}</div>
+             <div className="text-2xl font-black text-gray-900">{imports.filter((i: any) => i.status === 'AU_PORT').length}</div>
              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Arrivés au Port</div>
            </div>
         </Card>
@@ -260,7 +260,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
              <TrendingUp className="w-7 h-7" />
            </div>
            <div>
-             <div className="text-2xl font-black text-gray-900">{imports.filter(i => i.status === 'DÉDOUANÉ').length}</div>
+             <div className="text-2xl font-black text-gray-900">{imports.filter((i: any) => i.status === 'DÉDOUANÉ').length}</div>
              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Dédouanés</div>
            </div>
         </Card>
@@ -269,7 +269,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
              <Package className="w-7 h-7" />
            </div>
            <div>
-             <div className="text-2xl font-black text-gray-900">{imports.filter(i => i.status === 'EN_STOCK').length}</div>
+             <div className="text-2xl font-black text-gray-900">{imports.filter((i: any) => i.status === 'EN_STOCK').length}</div>
              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Mis en Stock</div>
            </div>
         </Card>
@@ -285,13 +285,13 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
               placeholder="Rechercher tracking ou fournisseur..." 
               className="pl-11 h-12 rounded-[1.2rem] border-gray-100 bg-white font-bold"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e: any) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
 
         <div className="space-y-6">
-          {filteredImports.map((purchase) => {
+          {filteredImports.map((purchase: any) => {
             const StatusIcon = statusIcons[purchase.status] || Clock;
             return (
               <Card key={purchase.id} className="p-8 rounded-[3.5rem] border-gray-50 bg-white hover:shadow-2xl hover:shadow-gray-100 transition-all group overflow-hidden relative">
@@ -327,7 +327,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                              purchase.status === 'RECUPÉRÉ' ? 'w-[90%]' : 'w-full'
                            )}></div>
                         </div>
-                        {Object.keys(statusIcons).map((s, idx) => {
+                        {Object.keys(statusIcons).map((s: any, idx: number) => {
                           const Icon = statusIcons[s];
                           const isActive = s === purchase.status;
                           return (

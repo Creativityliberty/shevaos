@@ -50,7 +50,7 @@ export function FournisseursClient({ initialSuppliers }: Props) {
     category: "Général"
   });
 
-  const filteredSuppliers = suppliers.filter(s => 
+  const filteredSuppliers = suppliers.filter((s: any) => 
     s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.country?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -106,7 +106,7 @@ export function FournisseursClient({ initialSuppliers }: Props) {
                           placeholder="Ex: Guangzhou Logistics Ltd..." 
                           className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold px-6"
                           value={formData.name}
-                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          onChange={(e: any) => setFormData({...formData, name: e.target.value})}
                           required
                         />
                       </div>
@@ -116,7 +116,7 @@ export function FournisseursClient({ initialSuppliers }: Props) {
                           placeholder="Personnel..." 
                           className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold px-6"
                           value={formData.contact_name}
-                          onChange={(e) => setFormData({...formData, contact_name: e.target.value})}
+                          onChange={(e: any) => setFormData({...formData, contact_name: e.target.value})}
                         />
                       </div>
                       <div className="space-y-2">
@@ -125,7 +125,7 @@ export function FournisseursClient({ initialSuppliers }: Props) {
                           placeholder="Chine, Turquie..." 
                           className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold px-6"
                           value={formData.country}
-                          onChange={(e) => setFormData({...formData, country: e.target.value})}
+                          onChange={(e: any) => setFormData({...formData, country: e.target.value})}
                         />
                       </div>
                     </div>
@@ -145,14 +145,14 @@ export function FournisseursClient({ initialSuppliers }: Props) {
               placeholder="Rechercher par nom ou pays..." 
               className="pl-14 h-14 rounded-2xl border-none bg-gray-50/50 font-bold text-lg"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e: any) => setSearchTerm(e.target.value)}
            />
         </div>
       </div>
 
       {/* Grid of Suppliers Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-24">
-        {filteredSuppliers.map((supplier) => (
+        {filteredSuppliers.map((supplier: any) => (
           <Card key={supplier.id} className="p-8 rounded-[3rem] border border-gray-100 bg-white transition-all group relative overflow-hidden h-full flex flex-col justify-between hover:shadow-2xl hover:shadow-gray-200">
             <div className="space-y-6">
                <div className="flex justify-between items-start">
