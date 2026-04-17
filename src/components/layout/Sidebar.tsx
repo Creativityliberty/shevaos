@@ -78,7 +78,8 @@ const NAV_ITEMS: NavItem[] = [
     roles: ["ceo", "manager", "stock_manager", "achats", "super_admin"],
     children: [
       { label: "Inventaire Hub", href: "/stock/inventory" },
-      { label: "Catalogue Produits", href: "/stock/products" },
+      { label: "Catalogue Administration", href: "/admin/catalog" },
+      { label: "État des Stocks", href: "/stock/products" },
       { label: "Réception Marchandise", href: "/stock/receive" },
       { label: "Suivi Mouvements", href: "/stock/movements" }
     ]

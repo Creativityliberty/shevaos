@@ -8,7 +8,7 @@ export async function getCeoVisionReport(days: number = 30) {
   const { data, error } = await supabase.rpc("get_ceo_performance_report", { p_days: days });
 
   if (error) {
-    console.error("Error fetching vision report:", error);
+    console.error("Error fetching vision report:", error.message || error);
     return null;
   }
 
