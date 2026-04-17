@@ -72,7 +72,7 @@ export function ExpenseClient({ initialExpenses, initialCategories }: Props) {
     try {
       await createExpense({
         amount: parseFloat(formData.amount),
-        category: formData.category,
+        category: formData.category as any,
         description: formData.description,
         expense_date: formData.expense_date
       });

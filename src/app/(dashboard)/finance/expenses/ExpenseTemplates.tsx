@@ -74,6 +74,7 @@ export function ExpenseTemplates() {
     try {
       await createExpenseTemplate({
         ...formData,
+        category: formData.category as any,
         amount: parseFloat(formData.amount),
         day_of_period: parseInt(formData.day_of_period)
       });
