@@ -103,7 +103,7 @@ export default function OrdersPage() {
       // Fetch scoring separately since the view might not have an FK defined
       const { data: scores } = await supabase.from("v_customer_scoring").select("*");
       
-      const ordersWithScoring = data?.map(order => ({
+      const ordersWithScoring = data?.map((order: any) => ({
         ...order,
         customer_scoring: scores?.find(s => s.customer_id === order.customer_id)
       })) || [];
