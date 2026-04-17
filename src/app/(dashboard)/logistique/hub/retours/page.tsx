@@ -39,7 +39,7 @@ export default function HubReturnsPage() {
     setLoading(false);
   };
 
-  const handleProcessReturn = async (missionId: string, status: "RETOUR_CONTRÔLÉ" | "RETOUR_CLOTURÉ") => {
+  const handleProcessReturn = async (missionId: string, status: "RETOUR_CONTRÔLÉ" | "RETOUR_CLOTURÉ" | "RETOUR_REÇU_HUB") => {
     setProcessingId(missionId);
     try {
       const { error } = await supabase
