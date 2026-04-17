@@ -41,6 +41,12 @@ const NAV_ITEMS: NavItem[] = [
     roles: ["ceo", "manager", "super_admin"] 
   },
   { 
+    label: "Alertes Système", 
+    href: "/alerts", 
+    icon: AlertCircle, 
+    roles: ["ceo", "manager", "super_admin"] 
+  },
+  { 
     label: "Vision Stratégique", 
     href: "/admin/vision", 
     icon: TrendingUp, 

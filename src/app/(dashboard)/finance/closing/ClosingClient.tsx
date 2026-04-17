@@ -117,7 +117,7 @@ export function ClosingClient() {
                  <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Vérification des <span className="text-primary">Recettes</span></h2>
                  <Badge className={cn(
                    "px-4 py-1.5 rounded-xl font-black text-[10px] uppercase border",
-                   currentClosing.status === 'VALIIDÉ' ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
+                   currentClosing.status === 'VALIDÉ' ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
                    currentClosing.status === 'ÉCART_SIGNALÉ' ? "bg-red-50 text-red-600 border-red-100" :
                    "bg-orange-50 text-orange-600 border-orange-100"
                  )}>
@@ -164,7 +164,7 @@ export function ClosingClient() {
                             value={actualAmount}
                             onChange={(e) => setActualAmount(e.target.value)}
                             required
-                            disabled={currentClosing.status === 'VALIIDÉ'}
+                            disabled={currentClosing.status === 'VALIDÉ'}
                           />
                        </div>
                     </div>
@@ -201,18 +201,18 @@ export function ClosingClient() {
                       className="w-full min-h-[120px] rounded-[1.5rem] bg-gray-50 border-gray-100 p-6 font-bold text-gray-900 focus:bg-white transition-all focus:ring-primary focus:border-primary border-2"
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      disabled={currentClosing.status === 'VALIIDÉ'}
+                      disabled={currentClosing.status === 'VALIDÉ'}
                     />
                  </div>
 
                  <Button 
                    type="submit" 
-                   disabled={isSubmitting || currentClosing.status === 'VALIIDÉ'} 
+                   disabled={isSubmitting || currentClosing.status === 'VALIDÉ'} 
                    className="w-full h-20 rounded-[1.5rem] bg-gray-900 text-white font-black text-xl shadow-2xl shadow-gray-200 group transition-all active:scale-95"
                  >
                     {isSubmitting ? <Loader2 className="animate-spin" /> : (
                       <span className="flex items-center gap-4">
-                        {currentClosing.status === 'VALIIDÉ' ? "SESSION DÉJÀ CLOTURÉE" : "CERTIFIER ET CLOTURER LA CAISSE"}
+                        {currentClosing.status === 'VALIDÉ' ? "SESSION DÉJÀ CLOTURÉE" : "CERTIFIER ET CLOTURER LA CAISSE"}
                         <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                       </span>
                     )}
@@ -242,9 +242,9 @@ export function ClosingClient() {
                       </div>
                       <div className={cn(
                         "w-8 h-8 rounded-full flex items-center justify-center",
-                        close.status === 'VALIIDÉ' ? "bg-emerald-50 text-emerald-500" : "bg-red-50 text-red-500"
+                        close.status === 'VALIDÉ' ? "bg-emerald-50 text-emerald-500" : "bg-red-50 text-red-500"
                       )}>
-                        {close.status === 'VALIIDÉ' ? <CheckCircle2 className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
+                        {close.status === 'VALIDÉ' ? <CheckCircle2 className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
                       </div>
                    </div>
                    <div className="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between text-[9px]">
