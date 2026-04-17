@@ -41,13 +41,14 @@ export async function getLedgerEntries() {
   return data;
 }
 
-export async function verifyAndLedgerDeposit(depositId: string, verifiedAmount: number, notes?: string) {
+export async function verifyAndLedgerDeposit(depositId: string, verifiedAmount: number, accountId: string, notes?: string) {
   const supabase = await createClient();
 
   try {
     const { data, error } = await supabase.rpc("verify_and_ledger_deposit", {
       p_deposit_id: depositId,
       p_verified_amount: verifiedAmount,
+      p_account_id: accountId,
       p_notes: notes || null
     });
 

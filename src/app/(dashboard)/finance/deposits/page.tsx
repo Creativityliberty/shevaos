@@ -1,8 +1,12 @@
 import { getPendingDepositsForFinance } from "@/features/finance/actions/ledger-actions";
+import { getFinanceAccounts } from "@/features/finance/actions/account-actions";
 import { FinanceDepositClient } from "./FinanceDepositClient";
 
 export default async function FinanceDepositsPage() {
-  const pendingDeposits = await getPendingDepositsForFinance();
+  const [pendingDeposits, accounts] = await Promise.all([
+    getPendingDepositsForFinance(),
+    getFinanceAccounts()
+  ]);
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
@@ -15,7 +19,7 @@ export default async function FinanceDepositsPage() {
         </p>
       </div>
 
-      <FinanceDepositClient deposits={pendingDeposits || []} />
+      <FinanceDepositClient deposits={pendingDeposits || []} accounts={accounts || []} />
     </div>
   );
 }

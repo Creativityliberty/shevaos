@@ -7,11 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { verifyAndLedgerDeposit } from "@/features/finance/actions/ledger-actions";
-import { CheckCircle2, AlertTriangle, AlertCircle, Loader2, Landmark, Clock } from "lucide-react";
+import { CheckCircle2, AlertTriangle, AlertCircle, Loader2, Landmark, Clock, Wallet } from "lucide-react";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 
-export function FinanceDepositClient({ deposits }: { deposits: any[] }) {
+export function FinanceDepositClient({ deposits, accounts }: { deposits: any[], accounts: any[] }) {
   const [selectedDeposit, setSelectedDeposit] = useState<any>(null);
   const [verifiedAmount, setVerifiedAmount] = useState<string>("");
+  const [selectedAccountId, setSelectedAccountId] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -28,14 +36,16 @@ export function FinanceDepositClient({ deposits }: { deposits: any[] }) {
   const handleVerify = async () => {
     if(!selectedDeposit) return;
     if(!verifiedAmount) { toast.error("Montant requis", { description: "Veuillez saisir la somme finale vérifiée par la banque ou par vous-même." }); return; }
+    if(!selectedAccountId) { toast.error("Compte requis", { description: "Veuillez sélectionner le compte de trésorerie cible." }); return; }
     
     setIsSubmitting(true);
     try {
-      const res = await verifyAndLedgerDeposit(selectedDeposit.id, verified, notes);
+      const res = await verifyAndLedgerDeposit(selectedDeposit.id, verified, selectedAccountId, notes);
       if (res.success) {
-        toast.success("Succès", { description: "L'argent est sécurisé et gravé dans le Grand Livre comptable." });
+        toast.success("Succès", { description: "L'argent est sécurisé, le solde du compte mis à jour et l'action gravée dans le Ledger." });
         setSelectedDeposit(null);
         setVerifiedAmount("");
+        setSelectedAccountId("");
         setNotes("");
       } else {
         toast.error("Erreur d'audit", { description: res.error });
@@ -135,6 +145,24 @@ export function FinanceDepositClient({ deposits }: { deposits: any[] }) {
                     )}
                   </div>
                 )}
+             </div>
+
+             <div className="space-y-4">
+                <label className="text-xs uppercase font-black text-gray-400 tracking-widest flex items-center gap-2">
+                  <Wallet className="w-3 h-3" /> Compte de Trésorerie Cible
+                </label>
+                <Select onValueChange={setSelectedAccountId} value={selectedAccountId}>
+                  <SelectTrigger className="h-12 bg-gray-800 border-gray-700 rounded-xl text-white">
+                    <SelectValue placeholder="Choisir où déposer l'argent..." />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl bg-gray-800 text-white border-gray-700">
+                    {accounts.map(acc => (
+                      <SelectItem key={acc.id} value={acc.id} className="focus:bg-gray-700 focus:text-white">
+                        {acc.name} ({acc.type}) — {acc.balance.toLocaleString()} F
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
              </div>
 
              <div>

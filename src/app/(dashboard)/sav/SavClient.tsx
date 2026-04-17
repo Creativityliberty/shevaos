@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { 
   Headset, 
   AlertTriangle, 
@@ -232,9 +233,11 @@ export function SavClient({ initialIncidents }: SavClientProps) {
                         )}
                       </>
                     )}
-                    <Button variant="ghost" className="w-full rounded-xl font-bold text-gray-400 hover:text-gray-900 h-11 gap-2">
-                      Voir commande <ArrowRight className="w-4 h-4" />
-                    </Button>
+                    <Link href={`/orders/${incident.orders?.id || incident.order_id}`}>
+                      <Button variant="ghost" className="w-full rounded-xl font-bold text-gray-400 hover:text-gray-900 h-11 gap-2">
+                        Voir commande <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </Card>

@@ -40,6 +40,14 @@ import {
 import { Card } from "@/components/ui/card";
 import { createOrder } from "../actions/create-order";
 import { createOrderSchema, CreateOrderInput } from "../schemas/order-schema";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger 
+} from "@/components/ui/dialog";
+import { createCustomer } from "@/features/customers/actions/customer-actions";
 
 interface CreateOrderFormProps {
   customers: any[];
@@ -50,6 +58,8 @@ interface CreateOrderFormProps {
 export function CreateOrderForm({ customers, products, zones }: CreateOrderFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuggestingZone, setIsSuggestingZone] = useState(false);
+  const [isCustomerDialogOpen, setIsCustomerDialogOpen] = useState(false);
+  const [isCreatingCustomer, setIsCreatingCustomer] = useState(false);
   const router = useRouter();
 
   const form = useForm<CreateOrderInput>({
@@ -119,6 +129,38 @@ export function CreateOrderForm({ customers, products, zones }: CreateOrderFormP
   const deliveryFee = form.watch("delivery_fee") || 0;
   const totalCOD = subtotal + deliveryFee;
 
+  async function handleCreateCustomer() {
+    const name = (document.getElementById("cust_name") as HTMLInputElement)?.value;
+    const phone = (document.getElementById("cust_phone") as HTMLInputElement)?.value;
+    const address = (document.getElementById("cust_address") as HTMLInputElement)?.value;
+
+    if (!name || !phone) {
+      toast.error("Champs requis", { description: "Le nom et le téléphone sont obligatoires." });
+      return;
+    }
+
+    setIsCreatingCustomer(true);
+    try {
+      const newCustomer = await createCustomer({
+        full_name: name,
+        phone,
+        address,
+        status: "ACTIVE"
+      });
+
+      if (newCustomer) {
+        toast.success("Client créé !");
+        setIsCustomerDialogOpen(false);
+        form.setValue("customer_id", newCustomer.id);
+        router.refresh();
+      }
+    } catch (err: any) {
+      toast.error("Erreur", { description: err.message });
+    } finally {
+      setIsCreatingCustomer(false);
+    }
+  }
+
   async function onSubmit(values: CreateOrderInput) {
     setIsLoading(true);
     try {
@@ -152,30 +194,67 @@ export function CreateOrderForm({ customers, products, zones }: CreateOrderFormP
                 <User className="w-4 h-4" /> Client & Livraison
               </div>
               
-              <FormField
-                control={form.control}
-                name="customer_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Client</FormLabel>
-                    <Select onValueChange={(val: any) => field.onChange(val)} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="rounded-xl h-11 border-gray-100">
-                          <SelectValue placeholder="Sélectionner un client" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="rounded-xl border-gray-100">
-                        {customers.map((c) => (
-                          <SelectItem key={c.id} value={c.id} className="rounded-lg">
-                            {c.full_name} ({c.phone})
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <FormLabel>Client</FormLabel>
+                  <Dialog open={isCustomerDialogOpen} onOpenChange={setIsCustomerDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-7 text-[10px] font-black uppercase text-primary hover:bg-orange-50 gap-1 px-2">
+                        <Plus className="w-3 h-3" /> Nouveau
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="rounded-[2rem] p-8 max-w-sm">
+                      <DialogHeader>
+                        <DialogTitle className="text-xl font-black uppercase tracking-tight">Ajouter un <span className="text-primary">Client</span></DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 pt-4">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Nom Complet</label>
+                          <Input id="cust_name" placeholder="Ex: Jean Dupont" className="rounded-xl border-gray-100 h-11" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Téléphone (10 chiffres)</label>
+                          <Input id="cust_phone" placeholder="01XXXXXXXX" className="rounded-xl border-gray-100 h-11" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Adresse / Quartier</label>
+                          <Input id="cust_address" placeholder="Cocody, Riviera..." className="rounded-xl border-gray-100 h-11" />
+                        </div>
+                        <Button 
+                          className="w-full h-12 rounded-xl bg-gray-900 text-white font-black uppercase tracking-widest hover:bg-black mt-4"
+                          onClick={handleCreateCustomer}
+                          disabled={isCreatingCustomer}
+                        >
+                          {isCreatingCustomer ? <Loader2 className="w-4 h-4 animate-spin" /> : "ENREGISTRER LE CLIENT"}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+                <FormField
+                  control={form.control}
+                  name="customer_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Select onValueChange={(val: any) => field.onChange(val)} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="rounded-xl h-11 border-gray-100">
+                            <SelectValue placeholder="Sélectionner un client" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="rounded-xl border-gray-100">
+                          {customers.map((c) => (
+                            <SelectItem key={c.id} value={c.id} className="rounded-lg">
+                              {c.full_name} ({c.phone})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <FormField

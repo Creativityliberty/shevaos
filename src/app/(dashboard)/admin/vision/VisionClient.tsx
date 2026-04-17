@@ -56,7 +56,7 @@ export function VisionClient({ initialData }: Props) {
 
   if (!data || !data.revenue && data.revenue !== 0) return <div className="p-20 text-center font-black uppercase text-gray-400">Chargement de la Vision...</div>;
 
-  const marginRate = data.revenue > 0 ? (data.net_margin / data.revenue) * 100 : 0;
+  const marginRate = data.verified_revenue > 0 ? (data.net_profit / data.verified_revenue) * 100 : 0;
 
   return (
     <div className="space-y-10 animate-in fade-in zoom-in-95 duration-1000 pb-24">
@@ -82,13 +82,17 @@ export function VisionClient({ initialData }: Props) {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 w-full lg:w-auto">
+          <div className="grid grid-cols-3 gap-4 w-full lg:w-auto">
              <div className="p-6 bg-white/5 rounded-[2.5rem] border border-white/10 backdrop-blur-md">
-                <p className="text-[10px] font-black uppercase text-emerald-400 tracking-widest mb-1">Marge Nette</p>
+                <p className="text-[10px] font-black uppercase text-emerald-400 tracking-widest mb-1">Profit Net</p>
                 <p className="text-3xl font-black tabular-nums">{Math.round(marginRate)}%</p>
              </div>
              <div className="p-6 bg-white/5 rounded-[2.5rem] border border-white/10 backdrop-blur-md">
-                <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">Taux Succès</p>
+                <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">ROAS</p>
+                <p className="text-3xl font-black tabular-nums">{data.roas}x</p>
+             </div>
+             <div className="p-6 bg-white/5 rounded-[2.5rem] border border-white/10 backdrop-blur-md">
+                <p className="text-[10px] font-black uppercase text-emerald-400 tracking-widest mb-1">Efficience</p>
                 <p className="text-3xl font-black tabular-nums">{data.success_rate}%</p>
              </div>
           </div>
@@ -129,37 +133,67 @@ export function VisionClient({ initialData }: Props) {
                    <h3 className="text-2xl font-black uppercase mb-10 text-gray-900 tracking-tight">Santé Financière</h3>
                    
                    <div className="space-y-8">
-                      <div className="flex items-end justify-between border-b border-gray-50 pb-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-gray-50 pb-8">
                          <div>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 text-left">Chiffre d'Affaires Brut</p>
-                            <p className="text-4xl font-black text-gray-900">{data.revenue.toLocaleString()} F</p>
+                            <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-1 text-left flex items-center gap-2">
+                               <ShieldCheck className="w-3 h-3" /> Chiffre d'Affaires Vérifié
+                            </p>
+                            <p className="text-4xl font-black text-gray-900">{data.verified_revenue.toLocaleString()} F</p>
+                            <p className="text-[9px] text-gray-400 font-bold uppercase mt-1 italic">Audit Finance OK (Cash en main)</p>
                          </div>
-                         <TrendingUp className="w-8 h-8 text-emerald-500 mb-1" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-10">
-                         <div className="text-left">
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Cost of Goods (COGS)</p>
-                            <p className="text-2xl font-black text-red-400">-{data.cogs.toLocaleString()} F</p>
-                            <div className="w-full bg-gray-50 h-1.5 rounded-full mt-3">
-                               <div className="bg-red-200 h-full rounded-full" style={{ width: `${(data.cogs / data.revenue) * 100}%` }}></div>
-                            </div>
-                         </div>
-                         <div className="text-left">
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Autres Charges</p>
-                            <p className="text-2xl font-black text-red-500">-{data.expenses.toLocaleString()} F</p>
-                            <div className="w-full bg-gray-50 h-1.5 rounded-full mt-3">
-                               <div className="bg-red-400 h-full rounded-full" style={{ width: `${(data.expenses / data.revenue) * 100}%` }}></div>
-                            </div>
+                         <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 text-left flex items-center gap-2">
+                               <Clock className="w-3 h-3" /> Potentiel en cours (Estimated)
+                            </p>
+                            <p className="text-xl font-black text-gray-600">{data.pending_revenue.toLocaleString()} F</p>
+                            <p className="text-[9px] text-gray-400 font-bold uppercase mt-1 leading-none">Commandes livrées ou déposées hub en attente de vérification.</p>
                          </div>
                       </div>
-                      <div className="bg-gray-900 rounded-[2.5rem] p-8 text-white flex justify-between items-center shadow-2xl">
-                         <div>
-                            <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1">Profit Net Réel</p>
-                            <p className="text-5xl font-black">{data.net_margin.toLocaleString()} F</p>
+
+                      <div className="grid grid-cols-3 gap-6">
+                         <div className="text-left bg-orange-50/30 p-4 rounded-2xl border border-orange-100">
+                            <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-2 flex items-center gap-1">
+                               <Zap className="w-3 h-3" /> Marketing Ads
+                            </p>
+                            <p className="text-xl font-black text-orange-700">-{data.marketing_spend.toLocaleString()} F</p>
+                            <p className="text-[9px] font-bold text-orange-500 mt-1 uppercase">ROI: {data.roas}x</p>
                          </div>
-                         <div className="text-right">
-                            <div className="w-16 h-16 rounded-full border-4 border-emerald-500/20 flex items-center justify-center">
-                               <span className="font-black text-emerald-400 text-sm">{Math.round(marginRate)}%</span>
+                         <div className="text-left bg-red-50/30 p-4 rounded-2xl border border-red-100">
+                            <p className="text-[10px] font-black text-red-600 uppercase tracking-widest mb-2 flex items-center gap-1">
+                               <Package className="w-3 h-3" /> Stock (COGS)
+                            </p>
+                            <p className="text-xl font-black text-red-700">-{data.cogs.toLocaleString()} F</p>
+                            <div className="w-full bg-red-100 h-1 rounded-full mt-2">
+                               <div className="bg-red-500 h-full rounded-full" style={{ width: `${(data.cogs / Math.max(1, data.total_estimated_revenue)) * 100}%` }}></div>
+                            </div>
+                         </div>
+                         <div className="text-left bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
+                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 flex items-center gap-1">
+                               <DollarSign className="w-3 h-3" /> Frais Admin/RH
+                            </p>
+                            <p className="text-xl font-black text-gray-900">-{data.other_expenses.toLocaleString()} F</p>
+                            <div className="w-full bg-gray-100 h-1 rounded-full mt-2">
+                               <div className="bg-gray-400 h-full rounded-full" style={{ width: `${(data.other_expenses / Math.max(1, data.total_estimated_revenue)) * 100}%` }}></div>
+                            </div>
+                         </div>
+                      </div>
+
+                      <div className="bg-gray-900 rounded-[2.5rem] p-8 text-white flex justify-between items-center shadow-2xl relative overflow-hidden">
+                         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mt-16" />
+                         <div className="relative z-10">
+                            <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1">Profit Net Réel (Audit OK)</p>
+                            <p className="text-5xl font-black tracking-tighter tabular-nums">{data.net_profit.toLocaleString()} F</p>
+                         </div>
+                         <div className="relative z-10 text-right">
+                            <div className={cn(
+                              "w-20 h-20 rounded-full border-4 flex flex-col items-center justify-center bg-black/40",
+                              marginRate > 30 ? "border-emerald-500" : "border-amber-500"
+                            )}>
+                               <span className={cn(
+                                 "font-black text-lg",
+                                 marginRate > 30 ? "text-emerald-400" : "text-amber-400"
+                               )}>{Math.round(marginRate)}%</span>
+                               <span className="text-[8px] font-bold uppercase text-gray-400 -mt-1">Marge</span>
                             </div>
                          </div>
                       </div>
@@ -264,16 +298,17 @@ export function VisionClient({ initialData }: Props) {
               <div className="space-y-4">
                  {[
                    { label: 'Stock / Marchandise', price: data.cogs, color: 'bg-emerald-500' },
-                   { label: 'Charges Fixes', price: data.expenses, color: 'bg-gray-300' },
-                   { label: 'Profit Libre', price: data.net_margin, color: 'bg-primary' },
+                   { label: 'Marketing Spend', price: data.marketing_spend, color: 'bg-orange-500' },
+                   { label: 'Charges Admin', price: data.other_expenses, color: 'bg-gray-300' },
+                   { label: 'Profit Réel', price: data.net_profit, color: 'bg-primary' },
                  ].map((item, i) => (
                    <div key={i} className="space-y-2">
                       <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-tighter">
                          <span className="text-gray-400">{item.label}</span>
-                         <span className="text-gray-900">{Math.round((item.price / data.revenue) * 100)}%</span>
+                         <span className="text-gray-900">{Math.round((item.price / Math.max(1, data.total_estimated_revenue)) * 100)}%</span>
                       </div>
                       <div className="w-full h-1.5 bg-gray-50 rounded-full overflow-hidden">
-                         <div className={cn("h-full rounded-full transition-all duration-1000", item.color)} style={{ width: `${(item.price / data.revenue) * 100}%` }}></div>
+                         <div className={cn("h-full rounded-full transition-all duration-1000", item.color)} style={{ width: `${(item.price / Math.max(1, data.total_estimated_revenue)) * 100}%` }}></div>
                       </div>
                    </div>
                  ))}
