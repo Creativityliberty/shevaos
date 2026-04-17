@@ -10,12 +10,12 @@ export default async function CeoDashboard() {
   // Appeler les RPCs de performance
   const [
     { data: metrics },
-    { data: healthData },
+    { data: perfReport },
     { data: products },
     { count: openIncidents }
   ] = await Promise.all([
     supabase.rpc("get_dashboard_metrics"),
-    supabase.rpc("get_financial_health", { p_days: 30 }),
+    supabase.rpc("get_ceo_performance_report", { p_days: 30 }),
     supabase.from("products").select("available_stock, min_stock_level"),
     supabase.from("customer_incidents").select("*", { count: 'exact', head: true }).eq("status", "OUVERT")
   ]);
@@ -28,12 +28,14 @@ export default async function CeoDashboard() {
     daily_revenue: []
   };
 
-  const health = healthData?.[0] || { 
-    total_revenue: 0, 
-    total_expenses: 0, 
+  const health = perfReport || { 
+    verified_revenue: 0, 
+    other_expenses: 0, 
+    marketing_spend: 0,
     net_profit: 0, 
-    delivery_rate: 0,
-    total_orders: 0
+    success_rate: 0,
+    order_count: 0,
+    roas: 0
   };
 
   const lowStockCount = products?.filter(p => p.available_stock <= p.min_stock_level).length || 0;
@@ -68,7 +70,7 @@ export default async function CeoDashboard() {
             </div>
             <div className="mt-8 relative text-left">
               <div className="text-xl lg:text-2xl font-black text-gray-900">
-                {Number(health.total_revenue).toLocaleString('fr-FR')} <span className="text-xs font-normal text-gray-400">F</span>
+                {Number(health.verified_revenue).toLocaleString('fr-FR')} <span className="text-xs font-normal text-gray-400">F</span>
               </div>
               <div className="text-[10px] font-bold text-primary uppercase mt-1 tracking-wider">CA Encaissé</div>
             </div>
@@ -86,9 +88,9 @@ export default async function CeoDashboard() {
             </div>
             <div className="mt-8 text-left">
               <div className="text-xl lg:text-2xl font-black text-red-500">
-                -{Number(health.total_expenses).toLocaleString('fr-FR')} <span className="text-xs font-normal text-gray-400">F</span>
+                -{Number(health.other_expenses).toLocaleString('fr-FR')} <span className="text-xs font-normal text-gray-400">F</span>
               </div>
-              <div className="text-[10px] font-bold text-gray-500 uppercase mt-1 tracking-wider">Dépenses</div>
+              <div className="text-[10px] font-bold text-gray-500 uppercase mt-1 tracking-wider">Dépenses Opé</div>
             </div>
           </Card>
         </Link>
@@ -138,9 +140,9 @@ export default async function CeoDashboard() {
             </div>
             <div className="mt-8">
               <div className="text-xl lg:text-2xl font-black text-indigo-500">
-                {Number(health.ads_spend).toLocaleString()} <span className="text-[10px] font-normal text-gray-400">F</span>
+                {Number(health.marketing_spend).toLocaleString()} <span className="text-[10px] font-normal text-gray-400">F</span>
               </div>
-              <div className="text-[10px] font-bold text-gray-500 uppercase mt-1 tracking-wider">Budget Marketing</div>
+              <div className="text-[10px] font-bold text-indigo-500 uppercase mt-1 tracking-wider">ROAS : {health.roas}x</div>
             </div>
           </Card>
         </Link>
@@ -151,11 +153,11 @@ export default async function CeoDashboard() {
             <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center">
               <Car className="w-6 h-6" />
             </div>
-            <Badge className="bg-blue-50 text-blue-600 border-none font-black text-[10px] uppercase">{Math.round(health.delivery_rate)}% Succès</Badge>
+            <Badge className="bg-blue-50 text-blue-600 border-none font-black text-[10px] uppercase">{Math.round(health.success_rate)}% Succès</Badge>
           </div>
           <div className="mt-8">
             <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-500 transition-all duration-1000" style={{ width: `${health.delivery_rate}%` }}></div>
+              <div className="h-full bg-blue-500 transition-all duration-1000" style={{ width: `${health.success_rate}%` }}></div>
             </div>
             <div className="text-[10px] font-bold text-gray-400 uppercase mt-4 tracking-wider">Ratio de Réussite</div>
           </div>
@@ -208,7 +210,7 @@ export default async function CeoDashboard() {
                 <ShoppingBag className="w-6 h-6" />
               </div>
               <div className="text-left">
-                <div className="text-2xl font-black text-gray-900 leading-none">{health.total_orders}</div>
+                <div className="text-2xl font-black text-gray-900 leading-none">{health.order_count}</div>
                 <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Commandes (30j)</div>
               </div>
             </div>
