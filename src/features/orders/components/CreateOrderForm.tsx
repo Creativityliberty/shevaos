@@ -158,7 +158,7 @@ export function CreateOrderForm({ customers, products, zones }: CreateOrderFormP
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Client</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={(val: any) => field.onChange(val)} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="rounded-xl h-11 border-gray-100">
                           <SelectValue placeholder="Sélectionner un client" />
@@ -184,7 +184,7 @@ export function CreateOrderForm({ customers, products, zones }: CreateOrderFormP
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Zone</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select onValueChange={(val: any) => field.onChange(val)} value={field.value}>
                         <FormControl>
                           <SelectTrigger className="rounded-xl h-11 border-gray-100">
                             <SelectValue placeholder="Zone" />
@@ -268,7 +268,7 @@ export function CreateOrderForm({ customers, products, zones }: CreateOrderFormP
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Fenêtre</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={(val: any) => field.onChange(val)} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="rounded-xl h-11 border-gray-100">
                             <SelectValue placeholder="Matin" />
@@ -358,7 +358,7 @@ export function CreateOrderForm({ customers, products, zones }: CreateOrderFormP
                           <FormItem>
                             <FormLabel className="text-xs uppercase font-bold text-gray-400">Produit</FormLabel>
                             <Select 
-                              onValueChange={(val) => {
+                              onValueChange={(val: any) => {
                                 field.onChange(val);
                                 const prod = products.find(p => p.id === val);
                                 if (prod) form.setValue(`items.${index}.unit_price`, prod.unit_price);

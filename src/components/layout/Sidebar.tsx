@@ -225,40 +225,54 @@ export function Sidebar() {
                   onClick={() => item.children ? toggleSubmenu(item.label) : null}
                   className="w-full"
                 >
-                  <a
-                    href={item.children ? undefined : item.href}
-                    onClick={(e) => {
-                      if (item.children) {
-                        e.preventDefault();
-                      }
-                    }}
-                    className={cn(
-                      "flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group mb-1",
-                      isActive 
-                        ? "bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]" 
-                        : "text-gray-500 hover:bg-gray-50 hover:text-primary"
-                    )}
-                  >
-                    <Icon className={cn(
-                      "w-5 h-5 transition-transform duration-300 group-hover:scale-110",
-                      isActive ? "text-white" : "text-gray-400 group-hover:text-primary"
-                    )} />
-                    {!isCollapsed && (
-                      <span className="font-bold text-sm flex-1 text-left">{item.label}</span>
-                    )}
-                    {!isCollapsed && item.children && (
-                      <ChevronRight className={cn(
-                        "w-4 h-4 transition-transform duration-300",
-                        isSubmenuOpen && "rotate-90 text-white"
+                  {item.children ? (
+                    <div
+                      className={cn(
+                        "flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group mb-1 cursor-pointer",
+                        isActive 
+                          ? "bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]" 
+                          : "text-gray-500 hover:bg-gray-50 hover:text-primary"
+                      )}
+                    >
+                      <Icon className={cn(
+                        "w-5 h-5 transition-transform duration-300 group-hover:scale-110",
+                        isActive ? "text-white" : "text-gray-400 group-hover:text-primary"
                       )} />
-                    )}
-                  </a>
+                      {!isCollapsed && (
+                        <span className="font-bold text-sm flex-1 text-left">{item.label}</span>
+                      )}
+                      {!isCollapsed && (
+                        <ChevronRight className={cn(
+                          "w-4 h-4 transition-transform duration-300",
+                          isSubmenuOpen && "rotate-90 text-white"
+                        )} />
+                      )}
+                    </div>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group mb-1",
+                        isActive 
+                          ? "bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]" 
+                          : "text-gray-500 hover:bg-gray-50 hover:text-primary"
+                      )}
+                    >
+                      <Icon className={cn(
+                        "w-5 h-5 transition-transform duration-300 group-hover:scale-110",
+                        isActive ? "text-white" : "text-gray-400 group-hover:text-primary"
+                      )} />
+                      {!isCollapsed && (
+                        <span className="font-bold text-sm flex-1 text-left">{item.label}</span>
+                      )}
+                    </Link>
+                  )}
                 </button>
 
                 {!isCollapsed && item.children && isSubmenuOpen && (
                   <div className="ml-12 mb-4 space-y-1 mt-1 border-l-2 border-primary/10 pl-4 animate-in slide-in-from-left-2 duration-300">
                     {item.children.map((child) => (
-                      <a
+                      <Link
                         key={child.label}
                         href={child.href}
                         className={cn(
@@ -267,7 +281,7 @@ export function Sidebar() {
                         )}
                       >
                         {child.label}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 )}

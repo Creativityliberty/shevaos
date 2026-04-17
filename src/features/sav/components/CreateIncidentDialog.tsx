@@ -85,7 +85,7 @@ export function CreateIncidentDialog({ orderId, orderNumber }: Props) {
             <div className="space-y-2">
               <label className="text-xs font-black uppercase text-gray-400 tracking-tighter">Type de Problème</label>
               <Select 
-                onValueChange={(val: IncidentType) => setFormData({...formData, incident_type: val})}
+                onValueChange={(val: any) => setFormData({...formData, incident_type: val as IncidentType})}
                 required
               >
                 <SelectTrigger className="h-12 rounded-xl border-gray-100 bg-gray-50/50 font-bold">
@@ -105,7 +105,7 @@ export function CreateIncidentDialog({ orderId, orderNumber }: Props) {
               <label className="text-xs font-black uppercase text-gray-400 tracking-tighter">Priorité</label>
               <Select 
                 defaultValue="MOYENNE"
-                onValueChange={(val) => setFormData({...formData, priority: val})}
+                onValueChange={(val: any) => setFormData({...formData, priority: val ?? 'MOYENNE'})}
               >
                 <SelectTrigger className="h-12 rounded-xl border-gray-100 bg-gray-50/50 font-bold">
                   <SelectValue />

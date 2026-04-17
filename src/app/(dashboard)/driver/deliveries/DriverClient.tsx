@@ -7,11 +7,23 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { confirmDelivery, reportDeliveryFailure } from "@/features/deliveries/actions/delivery-actions";
 import { toast } from "sonner";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 export function DriverClient({ activeDeliveries, completedDeliveries }: { activeDeliveries: any[], completedDeliveries: any[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [loadingAction, setLoadingAction] = useState<{id: string, action: 'confirm'|'fail'} | null>(null);
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
+  const [failureReason, setFailureReason] = useState("");
+  const [failureDialogOpen, setFailureDialogOpen] = useState(false);
+  const [failingDeliveryId, setFailingDeliveryId] = useState<string | null>(null);
 
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -32,14 +44,17 @@ export function DriverClient({ activeDeliveries, completedDeliveries }: { active
     }
   };
 
-  const handleFail = async (deliveryId: string, reason: string) => {
-    if (!reason?.trim()) return;
+  const handleFail = async () => {
+    if (!failingDeliveryId || !failureReason.trim()) return;
 
-    setLoadingAction({ id: deliveryId, action: 'fail' });
+    setLoadingAction({ id: failingDeliveryId, action: 'fail' });
     try {
-      const res = await reportDeliveryFailure(deliveryId, reason);
+      const res = await reportDeliveryFailure(failingDeliveryId, failureReason);
       if (res.success) {
         toast.info("Échec signalé", { description: "La commande revient au dispatch." });
+        setFailureDialogOpen(false);
+        setFailureReason("");
+        setFailingDeliveryId(null);
       } else {
         toast.error("Erreur", { description: res.error || res.message });
       }
@@ -133,9 +148,10 @@ export function DriverClient({ activeDeliveries, completedDeliveries }: { active
                            <Button 
                              variant="destructive"
                              className="h-16 rounded-2xl font-bold bg-white text-red-500 border-2 border-red-50 hover:bg-red-50 transition-all text-base"
-                             onClick={() => {
-                               const r = prompt("Raison de l'échec ?");
-                               if(r) handleFail(delivery.id, r);
+                             onClick={(e) => {
+                               e.stopPropagation();
+                               setFailingDeliveryId(delivery.id);
+                               setFailureDialogOpen(true);
                              }}
                              disabled={!!loadingAction}
                            >
@@ -143,7 +159,10 @@ export function DriverClient({ activeDeliveries, completedDeliveries }: { active
                            </Button>
                            <Button 
                              className="h-16 rounded-2xl font-black shadow-xl shadow-emerald-100 bg-emerald-600 hover:bg-emerald-700 text-white text-base transform active:scale-95 transition-all"
-                             onClick={() => setConfirmingId(delivery.id)}
+                             onClick={(e) => {
+                                e.stopPropagation();
+                                setConfirmingId(delivery.id);
+                             }}
                              disabled={!!loadingAction}
                            >
                              LIVRÉ & PAYÉ
@@ -190,6 +209,38 @@ export function DriverClient({ activeDeliveries, completedDeliveries }: { active
           </div>
         </div>
       )}
+      {/* DIALOG ECHEC */}
+      <Dialog open={failureDialogOpen} onOpenChange={setFailureDialogOpen}>
+          <DialogContent className="rounded-[2rem] border-none sm:max-w-[400px]">
+              <DialogHeader>
+                  <DialogTitle className="text-xl font-black flex items-center gap-3">
+                      <div className="p-2 bg-red-100 rounded-xl text-red-600">
+                          <XCircle className="w-6 h-6" />
+                      </div>
+                      Signaler un Échec
+                  </DialogTitle>
+              </DialogHeader>
+              <div className="py-4 space-y-4">
+                  <p className="text-sm font-medium text-gray-500 italic">Pourquoi cette livraison a-t-elle échoué ? (Inexistant, client absent, refusé...)</p>
+                  <Textarea 
+                    placeholder="Ex: Client ne décroche pas après 3 appels..."
+                    className="min-h-[100px] rounded-2xl border-gray-100 bg-gray-50 p-4 font-medium focus:ring-red-500"
+                    value={failureReason}
+                    onChange={(e) => setFailureReason(e.target.value)}
+                  />
+              </div>
+              <DialogFooter className="grid grid-cols-2 gap-3">
+                  <Button variant="ghost" onClick={() => setFailureDialogOpen(false)} className="rounded-xl h-12 font-bold">Annuler</Button>
+                  <Button 
+                    className="rounded-xl h-12 bg-red-500 hover:bg-red-600 text-white font-black"
+                    onClick={handleFail}
+                    disabled={!failureReason.trim() || !!loadingAction}
+                  >
+                    {loadingAction?.action === 'fail' ? <Loader2 className="animate-spin" /> : "SIGNALEZ ÉCHEC"}
+                  </Button>
+              </DialogFooter>
+          </DialogContent>
+      </Dialog>
     </div>
   );
 }

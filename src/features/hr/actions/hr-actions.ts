@@ -69,8 +69,8 @@ export async function calculatePayroll(userId: string, month: number, year: numb
     const { count } = await supabase
       .from("customer_incidents")
       .select("*", { count: 'exact', head: true })
-      .eq("handled_by", userId)
-      .eq("status", "RESOLVED");
+      .eq("operator_id", userId)
+      .eq("status", "RESOLU");
     
     savCommissions = (count || 0) * contract.commission_per_sav_incident;
   }

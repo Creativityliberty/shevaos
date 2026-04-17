@@ -12,9 +12,10 @@ export const createOrderSchema = z.object({
   delivery_address: z.string().min(5, "L'adresse de livraison est trop courte et imprécise"),
   delivery_fee: z.number().min(0, "Les frais de livraison ne peuvent pas être négatifs"),
   secondary_phone: z.string().optional(),
-  delivery_window: z.enum(["MATIN", "MIDI", "SOIR"]).optional().default("MATIN"),
+  delivery_window: z.enum(["MATIN", "MIDI", "SOIR"]),
   items: z.array(orderItemSchema).min(1, "Vous devez ajouter au moins un article à la commande"),
 });
 
-export type CreateOrderInput = z.infer<typeof createOrderSchema>;
+// Use z.input so the form type matches what zodResolver expects (input shape, not output shape)
+export type CreateOrderInput = z.input<typeof createOrderSchema>;
 export type OrderItemInput = z.infer<typeof orderItemSchema>;

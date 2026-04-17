@@ -139,7 +139,7 @@ export function SignupForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel className="text-gray-700">Rôle (Privilèges)</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={(val: any) => field.onChange(val)} defaultValue={field.value}>
                                 <FormControl>
                                     <SelectTrigger className="rounded-2xl border-gray-200 focus:ring-primary h-12 w-full">
                                         <SelectValue placeholder="Sélectionnez un rôle" />

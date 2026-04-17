@@ -13,6 +13,7 @@ import {
   Filter,
   ArrowDownCircle
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -113,14 +114,14 @@ export function ExpenseClient({ initialExpenses }: Props) {
              </div>
              
              <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-               <DialogTrigger 
-                 render={
-                   <Button className="h-14 px-8 rounded-2xl bg-black hover:bg-gray-800 text-white font-bold shadow-xl shadow-gray-200 transition-all hover:scale-[1.03] active:scale-95 flex gap-3">
-                     <Plus className="w-5 h-5" />
-                     Saisir une Dépense
-                   </Button>
-                 }
-               />
+               <DialogTrigger
+                  render={
+                    <Button className="h-14 px-8 rounded-2xl bg-black hover:bg-gray-800 text-white font-bold shadow-xl shadow-gray-200 transition-all hover:scale-[1.03] active:scale-95 flex gap-3 focus:ring-0 outline-none">
+                      <Plus className="w-5 h-5" />
+                      Saisir une Dépense
+                    </Button>
+                  }
+                />
                <DialogContent className="sm:max-w-[500px] rounded-[2rem] border-none shadow-2xl">
                  <DialogHeader>
                    <DialogTitle className="text-2xl font-black">Nouvelle Dépense</DialogTitle>
@@ -299,7 +300,3 @@ export function ExpenseClient({ initialExpenses }: Props) {
   );
 }
 
-// Utility to merge classnames
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(" ");
-}

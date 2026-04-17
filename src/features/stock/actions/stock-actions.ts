@@ -16,5 +16,17 @@ export async function getProductsWithStock() {
 
   if (error) throw new Error(error.message);
 
-  return data;
+  // Agrégation manuelle pour le client
+  return (data || []).map(p => {
+    const totalStock = p.stock_levels?.reduce((acc: number, curr: any) => acc + (curr.total_stock || 0), 0) || 0;
+    const totalReserved = p.stock_levels?.reduce((acc: number, curr: any) => acc + (curr.reserved_stock || 0), 0) || 0;
+    
+    return {
+      ...p,
+      total_stock: totalStock,
+      reserved_stock: totalReserved,
+      available_stock: totalStock - totalReserved,
+      price: p.unit_price // Mapping pour la compatibilité UI si nécessaire
+    };
+  });
 }

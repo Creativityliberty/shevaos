@@ -182,7 +182,7 @@ export function HrClient({ initialContracts, initialPayrolls }: Props) {
                       </div>
                     </div>
                     <div className="text-right">
-                       <p className="text-sm font-black text-emerald-400">{payroll.total_net.toLocaleString()} F</p>
+                       <p className="text-sm font-black text-emerald-400">{payroll.net_amount.toLocaleString()} F</p>
                        <Button variant="ghost" className="h-4 p-0 text-[8px] font-black text-gray-500 hover:text-white uppercase tracking-widest">Détails PDF</Button>
                     </div>
                   </div>
