@@ -185,7 +185,7 @@ export function ExpenseTemplates() {
                  </div>
                  <div className="space-y-1.5">
                     <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest pl-2">Catégorie</label>
-                    <Select value={formData.category} onValueChange={(val: string) => setFormData({...formData, category: val})}>
+                    <Select value={formData.category} onValueChange={(val: string | null) => setFormData({...formData, category: val ?? ""})}>
                        <SelectTrigger className="h-14 rounded-2xl bg-gray-50/50 border-gray-100 font-bold px-6">
                           <SelectValue placeholder="Choisir..." />
                        </SelectTrigger>

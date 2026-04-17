@@ -173,7 +173,7 @@ export function ExpenseClient({ initialExpenses, initialCategories }: Props) {
                      <div className="flex gap-2">
                         <Select 
                           value={formData.category} 
-                          onValueChange={(val: any) => setFormData({...formData, category: val})}
+                          onValueChange={(val: string | null) => setFormData({...formData, category: val ?? ""})}
                           required
                         >
                           <SelectTrigger className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold">
