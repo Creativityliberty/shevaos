@@ -240,7 +240,7 @@ export function Sidebar() {
       )}>
           {allowedItems.map((item: any) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href || (item.children?.some(child => child.href === pathname));
+            const isActive = pathname === item.href || (item.children?.some((child: any) => child.href === pathname));
             const isSubmenuOpen = openSubmenu === item.label;
 
             return (
@@ -295,7 +295,7 @@ export function Sidebar() {
 
                 {!isCollapsed && item.children && isSubmenuOpen && (
                   <div className="ml-12 mb-4 space-y-1 mt-1 border-l-2 border-primary/10 pl-4 animate-in slide-in-from-left-2 duration-300">
-                    {item.children.map((child) => (
+                    {item.children.map((child: any) => (
                       <Link
                         key={child.label}
                         href={child.href}
