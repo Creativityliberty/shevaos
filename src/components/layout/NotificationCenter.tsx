@@ -54,14 +54,14 @@ export function NotificationCenter() {
 
     if (!error && data) {
       setNotifications(data);
-      setUnreadCount(data.filter(n => !n.is_read).length);
+      setUnreadCount(data.filter((n: any) => !n.is_read).length);
     }
   };
 
   const markAllRead = async () => {
     const { error } = await supabase.rpc("mark_all_notifications_read");
     if (!error) {
-      setNotifications(notifications.map(n => ({ ...n, is_read: true })));
+      setNotifications(notifications.map((n: any) => ({ ...n, is_read: true })));
       setUnreadCount(0);
     }
   };
