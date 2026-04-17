@@ -84,7 +84,7 @@ export function HrClient({ initialContracts, initialPayrolls }: Props) {
            </div>
            <div>
              <div className="text-2xl font-black text-gray-900">
-               {contracts.reduce((acc, curr) => acc + curr.base_salary, 0).toLocaleString()} <span className="text-xs">F</span>
+               {contracts.reduce((acc, curr) => acc + (Number(curr.base_salary) || 0), 0).toLocaleString()} <span className="text-xs">F</span>
              </div>
              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Masse Salariale Fixe</div>
            </div>
@@ -144,7 +144,7 @@ export function HrClient({ initialContracts, initialPayrolls }: Props) {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Salaire de Base</p>
-                       <p className="text-sm font-black text-gray-900">{contract.base_salary.toLocaleString()} F</p>
+                       <p className="text-sm font-black text-gray-900">{(Number(contract.base_salary) || 0).toLocaleString()} F</p>
                     </div>
                     <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
                        <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Commissions</p>
@@ -182,7 +182,7 @@ export function HrClient({ initialContracts, initialPayrolls }: Props) {
                       </div>
                     </div>
                     <div className="text-right">
-                       <p className="text-sm font-black text-emerald-400">{payroll.net_amount.toLocaleString()} F</p>
+                       <p className="text-sm font-black text-emerald-400">{(Number(payroll.total_net) || 0).toLocaleString()} F</p>
                        <Button variant="ghost" className="h-4 p-0 text-[8px] font-black text-gray-500 hover:text-white uppercase tracking-widest">Détails PDF</Button>
                     </div>
                   </div>
