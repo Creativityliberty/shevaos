@@ -198,11 +198,11 @@ export function CreateOrderForm({ customers, products, zones }: CreateOrderFormP
                 <div className="flex items-center justify-between">
                   <FormLabel>Client</FormLabel>
                   <Dialog open={isCustomerDialogOpen} onOpenChange={setIsCustomerDialogOpen}>
-                    <DialogTrigger asChild>
+                    <DialogTrigger render={
                       <Button variant="ghost" size="sm" className="h-7 text-[10px] font-black uppercase text-primary hover:bg-orange-50 gap-1 px-2">
                         <Plus className="w-3 h-3" /> Nouveau
                       </Button>
-                    </DialogTrigger>
+                    } />
                     <DialogContent className="rounded-[2rem] p-8 max-w-sm">
                       <DialogHeader>
                         <DialogTitle className="text-xl font-black uppercase tracking-tight">Ajouter un <span className="text-primary">Client</span></DialogTitle>
