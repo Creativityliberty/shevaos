@@ -158,13 +158,11 @@ export function AccountsClient({ initialAccounts, initialTransfers }: Props) {
           </div>
           
           <Dialog open={isAddAccountOpen} onOpenChange={setIsAddAccountOpen}>
-            <DialogTrigger
-               render={
-                 <Button className="h-16 px-8 rounded-[2rem] bg-gray-900 hover:bg-black shadow-xl shadow-gray-200 font-black gap-3 text-lg">
-                   <Plus className="w-6 h-6" /> NOUVEAU COMPTE
-                 </Button>
-               }
-             />
+            <DialogTrigger asChild>
+              <Button className="h-16 px-8 rounded-[2rem] bg-gray-900 hover:bg-black shadow-xl shadow-gray-200 font-black gap-3 text-lg">
+                <Plus className="w-6 h-6" /> NOUVEAU COMPTE
+              </Button>
+            </DialogTrigger>
             <DialogContent className="rounded-[2.5rem] p-8 max-w-lg">
               <DialogHeader>
                 <DialogTitle className="text-2xl font-black uppercase tracking-tight">Ajouter un <span className="text-indigo-600">Compte</span></DialogTitle>

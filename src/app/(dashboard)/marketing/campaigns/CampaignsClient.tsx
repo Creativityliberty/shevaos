@@ -153,11 +153,11 @@ export function CampaignsClient({ initialCampaigns, accounts }: Props) {
            </div>
            
            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger render={
+              <DialogTrigger asChild>
                 <Button onClick={() => setEditingItem(null)} className="h-14 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-black font-black gap-2 shadow-lg shadow-orange-100 transition-all active:scale-95 text-xs">
                   <Plus className="w-5 h-5" /> NOUVELLE CAMPAGNE
                 </Button>
-              } />
+              </DialogTrigger>
               <DialogContent className="sm:max-w-[600px] rounded-[2.5rem] p-10">
                 <DialogHeader>
                   <DialogTitle className="text-3xl font-black uppercase tracking-tight">
@@ -273,11 +273,11 @@ export function CampaignsClient({ initialCampaigns, accounts }: Props) {
                   </Button>
                   
                   <DropdownMenu>
-                    <DropdownMenuTrigger render={
+                    <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="rounded-xl hover:bg-gray-50 text-gray-400">
                         <MoreVertical className="w-5 h-5" />
                       </Button>
-                    } />
+                    </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="rounded-2xl p-2 min-w-[160px]">
                        <DropdownMenuItem 
                          className="rounded-xl p-3 cursor-pointer"

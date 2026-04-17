@@ -123,14 +123,12 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
           </div>
         </div>
 
-        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-          <DialogTrigger 
-            render={
-              <Button className="h-16 px-8 rounded-[2rem] bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-100 font-black gap-3 text-lg transition-all active:scale-95">
-                <Plus className="w-6 h-6" /> NOUVEL ACHAT
-              </Button>
-            }
-          />
+            <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+              <DialogTrigger asChild>
+                <Button className="h-16 px-8 rounded-[2rem] bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-100 font-black gap-3 text-lg transition-all active:scale-95">
+                  <Plus className="w-6 h-6" /> NOUVELER ACHAT
+                </Button>
+              </DialogTrigger>
           <DialogContent className="rounded-[2.5rem] p-10 max-w-2xl border-none">
             <DialogHeader>
                <DialogTitle className="text-2xl font-black uppercase">Enregistrer un <span className="text-indigo-600">Achat Import</span></DialogTitle>

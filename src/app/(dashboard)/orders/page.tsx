@@ -277,8 +277,7 @@ export default function OrdersPage() {
           </div>
 
           <Popover open={showFilters} onOpenChange={setShowFilters}>
-            <PopoverTrigger 
-              render={
+            <PopoverTrigger asChild>
                 <Button variant="outline" className="rounded-2xl border-gray-200 font-bold gap-2 h-11 px-4">
                   <Filter className="w-4 h-4" />
                   Filtres Avancés
@@ -286,8 +285,7 @@ export default function OrdersPage() {
                     <span className="w-2 h-2 bg-primary rounded-full"></span>
                   )}
                 </Button>
-              }
-            />
+            </PopoverTrigger>
             <PopoverContent className="w-80 p-6 rounded-2xl" align="end">
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
