@@ -4,6 +4,8 @@ import { Bell, Menu, Search, User, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/core/auth/AuthProvider";
 import { Button } from "@/components/ui/button";
+import { NotificationCenter } from "./NotificationCenter";
+import { SearchCommand } from "./SearchCommand";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,28 +42,11 @@ export function Navbar() {
       </div>
 
       <div className="flex items-center gap-4">
-        {/* Barre de recherche globale (optionnelle) */}
-        <div className="hidden md:flex relative group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-primary transition-colors" />
-          <input
-            type="text"
-            placeholder="Rechercher..."
-            className="h-10 w-64 rounded-xl border border-gray-100 bg-gray-50/50 pl-10 pr-4 text-sm outline-none focus:border-primary/30 focus:bg-white transition-all"
-          />
-        </div>
+        {/* Global Search */}
+        <SearchCommand />
 
         {/* Notifications */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative rounded-xl hover:bg-orange-50 text-gray-500 hover:text-primary transition-colors"
-        >
-          <Bell className="h-5 w-5" />
-          <span className="absolute top-2 right-2 flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-          </span>
-        </Button>
+        <NotificationCenter />
 
         {/* Profil Utilisateur */}
         <DropdownMenu>
