@@ -9,7 +9,7 @@ export async function getCeoVisionReport(days: number = 30) {
 
   if (error) {
     console.error("Error fetching vision report:", error.message || error);
-    return null;
+    return { error: error.message || "Erreur de base de données" };
   }
 
   return data;

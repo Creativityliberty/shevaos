@@ -15,7 +15,8 @@ import {
   ShieldCheck,
   Zap,
   Star,
-  DollarSign
+  DollarSign,
+  AlertTriangle
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +33,28 @@ export function VisionClient({ initialData }: Props) {
   const [data, setData] = useState(initialData);
   const [activeTab, setActiveTab] = useState<"performance" | "logistics" | "inventory">("performance");
 
-  if (!data) return <div className="p-20 text-center font-black uppercase text-gray-400">Chargement de la Vision...</div>;
+  if (data?.error) {
+    return (
+      <div className="p-20 flex flex-col items-center justify-center gap-6">
+        <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center text-red-500">
+           <AlertTriangle className="w-10 h-10" />
+        </div>
+        <div className="text-center">
+           <h2 className="text-2xl font-black uppercase text-gray-900 mb-2">Accès Vision Interrompu</h2>
+           <p className="text-red-500 font-bold max-w-md mx-auto">{data.error}</p>
+        </div>
+        <div className="p-8 bg-gray-50 rounded-[2rem] border border-gray-100 max-w-lg text-left">
+           <p className="text-[10px] font-black uppercase text-gray-400 mb-4 tracking-widest">Diagnostic Technique</p>
+           <p className="text-xs font-mono text-gray-600 leading-relaxed">
+             Cette erreur survient généralement lorsque les dernières migrations n'ont pas été appliquées. 
+             Veuillez exécuter <b>supabase db push</b> ou contacter le support technique.
+           </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data || !data.revenue && data.revenue !== 0) return <div className="p-20 text-center font-black uppercase text-gray-400">Chargement de la Vision...</div>;
 
   const marginRate = data.revenue > 0 ? (data.net_margin / data.revenue) * 100 : 0;
 
