@@ -118,15 +118,19 @@ const NAV_ITEMS: NavItem[] = [
     icon: Users, 
     roles: ["ceo", "super_admin"],
     children: [
-      { label: "Dossiers RH", href: "/admin/hr" },
+      { label: "L'Équipe & Paie", href: "/hr" },
       { label: "Utilisateurs Système", href: "/admin/users" }
     ]
   },
   { 
     label: "Paramètres", 
-    href: "/settings", 
+    href: "/settings/zones", 
     icon: Settings, 
-    roles: ["ceo", "super_admin"] 
+    roles: ["ceo", "super_admin"],
+    children: [
+      { label: "Zones & Tarifs", href: "/settings/zones" },
+      { label: "Profil Utilisateur", href: "/settings" },
+    ]
   },
 ];
 
