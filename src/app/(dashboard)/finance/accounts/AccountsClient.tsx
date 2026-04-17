@@ -148,11 +148,13 @@ export function AccountsClient({ initialAccounts, initialTransfers }: Props) {
           </div>
           
           <Dialog open={isAddAccountOpen} onOpenChange={setIsAddAccountOpen}>
-            <DialogTrigger asChild>
-              <Button className="h-16 px-8 rounded-[2rem] bg-gray-900 hover:bg-black shadow-xl shadow-gray-200 font-black gap-3 text-lg">
-                <Plus className="w-6 h-6" /> NOUVEAU COMPTE
-              </Button>
-            </DialogTrigger>
+            <DialogTrigger
+               render={
+                 <Button className="h-16 px-8 rounded-[2rem] bg-gray-900 hover:bg-black shadow-xl shadow-gray-200 font-black gap-3 text-lg">
+                   <Plus className="w-6 h-6" /> NOUVEAU COMPTE
+                 </Button>
+               }
+             />
             <DialogContent className="rounded-[2.5rem] p-8 max-w-lg">
               <DialogHeader>
                 <DialogTitle className="text-2xl font-black uppercase tracking-tight">Ajouter un <span className="text-indigo-600">Compte</span></DialogTitle>
@@ -204,6 +206,23 @@ export function AccountsClient({ initialAccounts, initialTransfers }: Props) {
 
       {/* Accounts Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {accounts.length === 0 && (
+           <Card 
+            className="md:col-span-2 lg:col-span-4 p-20 border-dashed border-4 border-gray-100 bg-gray-50/50 flex flex-col items-center justify-center text-center rounded-[4rem] group cursor-pointer hover:bg-white hover:border-indigo-200 transition-all"
+            onClick={() => setIsAddAccountOpen(true)}
+           >
+              <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center shadow-xl mb-6 group-hover:scale-110 transition-transform">
+                <Wallet className="w-10 h-10 text-indigo-600" />
+              </div>
+              <h3 className="text-4xl font-black text-gray-900 uppercase">Zéro <span className="text-indigo-600">Compte</span> Actif</h3>
+              <p className="text-gray-400 font-bold mt-2 max-w-md uppercase text-[10px] tracking-[0.2em] leading-relaxed">
+                Configurez une Caisse physique, un compte Wave ou Orange Money pour commencer.
+              </p>
+              <Button className="mt-8 h-16 px-12 rounded-[2rem] bg-black text-white font-black text-lg shadow-2xl shadow-gray-200">
+                <Plus className="w-6 h-6 mr-3" /> INITIALISER MON PREMIER COMPTE
+              </Button>
+           </Card>
+        )}
         {accounts.map((account) => (
           <Card key={account.id} className="p-8 rounded-[3rem] border-2 border-transparent hover:border-indigo-100 bg-white transition-all group relative overflow-hidden h-full flex flex-col justify-between">
             <div className="space-y-6">

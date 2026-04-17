@@ -17,13 +17,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { updateTenantSettings } from "@/features/settings/actions/settings-actions";
+import { cn } from "@/lib/utils";
+
+import { ZoneSettings } from "./ZoneSettings";
 
 interface Props {
   tenant: any;
 }
 
+type Tab = "ENTREPRISE" | "LOCALISATION" | "FACTURATION" | "NOTIFICATIONS" | "SÉCURITÉ";
+
 export function SettingsClient({ tenant }: Props) {
   const [isSaving, setIsSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<Tab>("ENTREPRISE");
   const [enterpriseName, setEnterpriseName] = useState(tenant?.name || "");
 
   const onSave = async () => {
@@ -46,96 +52,124 @@ export function SettingsClient({ tenant }: Props) {
           <h1 className="text-3xl font-black text-gray-900 tracking-tight uppercase">Config. <span className="text-primary">Système</span></h1>
           <p className="text-gray-500 font-medium">Gérez votre infrastructure E-commerce et Trésorerie.</p>
         </div>
-        <Button onClick={onSave} disabled={isSaving} className="h-14 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-black font-black gap-3 shadow-lg shadow-orange-100 transition-all active:scale-95">
-          {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-          ENREGISTRER LES MODIFICATIONS
-        </Button>
+        
+        {activeTab === "ENTREPRISE" && (
+          <Button onClick={onSave} disabled={isSaving} className="h-14 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-black font-black gap-3 shadow-lg shadow-orange-100 transition-all active:scale-95">
+            {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+            ENREGISTRER LES MODIFICATIONS
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        {/* Sidebar Settings (Visual only for now) */}
+        {/* Sidebar Settings */}
         <div className="lg:col-span-3 space-y-2">
-           <button className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl bg-white border border-gray-100 text-primary font-black text-sm shadow-sm">
-              <Building2 className="w-5 h-5" /> ENTREPRISE
-           </button>
-           <button className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-gray-400 font-bold text-sm hover:bg-white transition-all">
-              <Globe className="w-5 h-5" /> LOCALISATION
-           </button>
-           <button className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-gray-400 font-bold text-sm hover:bg-white transition-all">
-              <CreditCard className="w-5 h-5" /> FACTURATION
-           </button>
-           <button className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-gray-400 font-bold text-sm hover:bg-white transition-all">
-              <Bell className="w-5 h-5" /> NOTIFICATIONS
-           </button>
-           <button className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-gray-400 font-bold text-sm hover:bg-white transition-all">
-              <Shield className="w-5 h-5" /> SÉCURITÉ
-           </button>
+           {[
+             { id: "ENTREPRISE", icon: Building2 },
+             { id: "LOCALISATION", icon: Globe, label: "ZONES & TARIFS" },
+             { id: "FACTURATION", icon: CreditCard },
+             { id: "NOTIFICATIONS", icon: Bell },
+             { id: "SÉCURITÉ", icon: Shield },
+           ].map((tab) => (
+             <button
+               key={tab.id}
+               onClick={() => setActiveTab(tab.id as Tab)}
+               className={cn(
+                 "w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-black text-sm transition-all",
+                 activeTab === tab.id 
+                  ? "bg-white border border-gray-100 text-primary shadow-sm" 
+                  : "text-gray-400 font-bold hover:bg-white/50"
+               )}
+             >
+               <tab.icon className="w-5 h-5" /> {tab.label || tab.id}
+             </button>
+           ))}
         </div>
 
         {/* Main Settings Card */}
         <div className="lg:col-span-9 space-y-8">
-           <Card className="p-10 rounded-[3rem] bg-white border-gray-100 shadow-sm space-y-8">
-              <div className="border-b border-gray-100 pb-6">
-                 <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Identité de l'Entreprise</h2>
-                 <p className="text-gray-400 font-medium text-sm">Ces informations apparaîtront sur vos factures et bons de livraison.</p>
-              </div>
+           {activeTab === "ENTREPRISE" && (
+             <div className="space-y-8 animate-in slide-in-from-right-4 duration-500">
+               <Card className="p-10 rounded-[3rem] bg-white border-gray-100 shadow-sm space-y-8">
+                  <div className="border-b border-gray-100 pb-6">
+                     <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Identité de l'Entreprise</h2>
+                     <p className="text-gray-400 font-medium text-sm">Ces informations apparaîtront sur vos factures et bons de livraison.</p>
+                  </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Nom Commercial</label>
-                    <Input 
-                        value={enterpriseName}
-                        onChange={(e) => setEnterpriseName(e.target.value)}
-                        className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold focus:bg-white transition-all"
-                    />
-                 </div>
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Slug Système (Lecture seule)</label>
-                    <Input 
-                        disabled
-                        value={tenant?.slug || ""}
-                        className="h-14 rounded-2xl border-gray-100 bg-gray-200/20 font-mono text-xs"
-                    />
-                 </div>
-              </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div className="space-y-2">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Nom Commercial</label>
+                        <Input 
+                            value={enterpriseName}
+                            onChange={(e) => setEnterpriseName(e.target.value)}
+                            className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold focus:bg-white transition-all"
+                        />
+                     </div>
+                     <div className="space-y-2">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Slug Système (Lecture seule)</label>
+                        <Input 
+                            disabled
+                            value={tenant?.slug || ""}
+                            className="h-14 rounded-2xl border-gray-100 bg-gray-200/20 font-mono text-xs"
+                        />
+                     </div>
+                  </div>
 
-              <div className="p-8 bg-blue-50/50 rounded-[2.5rem] border border-blue-100 space-y-4">
-                 <div className="flex items-center gap-3 text-blue-600">
-                    <Globe className="w-6 h-6" />
-                    <h3 className="font-black uppercase tracking-tight">Configuration Régionale</h3>
-                 </div>
-                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div>
-                       <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Devise</p>
-                       <p className="text-sm font-black text-gray-900">XAF (FCFA)</p>
-                    </div>
-                    <div>
-                       <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Fuseau Horaire</p>
-                       <p className="text-sm font-black text-gray-900">GMT+1 (Douala)</p>
-                    </div>
-                    <div>
-                       <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Langue</p>
-                       <p className="text-sm font-black text-gray-900">Français (FR)</p>
-                    </div>
-                 </div>
-              </div>
-           </Card>
+                  <div className="p-8 bg-blue-50/50 rounded-[2.5rem] border border-blue-100 space-y-4">
+                     <div className="flex items-center gap-3 text-blue-600">
+                        <Globe className="w-6 h-6" />
+                        <h3 className="font-black uppercase tracking-tight">Configuration Régionale</h3>
+                     </div>
+                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div>
+                           <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Devise</p>
+                           <p className="text-sm font-black text-gray-900">XAF (FCFA)</p>
+                        </div>
+                        <div>
+                           <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Fuseau Horaire</p>
+                           <p className="text-sm font-black text-gray-900">GMT+1 (Douala)</p>
+                        </div>
+                        <div>
+                           <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Langue</p>
+                           <p className="text-sm font-black text-gray-900">Français (FR)</p>
+                        </div>
+                     </div>
+                  </div>
+               </Card>
 
-           <Card className="p-10 rounded-[3rem] bg-gray-900 text-white space-y-6">
-              <div className="flex items-center gap-4">
-                 <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-primary" />
+               <Card className="p-10 rounded-[3rem] bg-gray-900 text-white space-y-6">
+                  <div className="flex items-center gap-4">
+                     <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
+                        <Shield className="w-6 h-6 text-primary" />
+                     </div>
+                     <div>
+                        <h3 className="text-xl font-black tracking-tight">Vérification de Conformité</h3>
+                        <p className="text-gray-400 font-medium text-xs">Vitesse de synchronisation : Temps réel</p>
+                     </div>
+                  </div>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                     Le système SHEVA OS est configuré pour isoler vos données (Tenant Isolation). 
+                     Chaque transaction est signée et liée à votre identifiant d'entreprise privé.
+                  </p>
+               </Card>
+             </div>
+           )}
+
+           {activeTab === "LOCALISATION" && (
+             <ZoneSettings />
+           )}
+
+           {["FACTURATION", "NOTIFICATIONS", "SÉCURITÉ"].includes(activeTab) && (
+              <Card className="p-20 rounded-[3rem] bg-white border-dashed border-2 border-gray-200 flex flex-col items-center justify-center space-y-6">
+                 <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center text-gray-200">
+                    <Settings className="w-10 h-10 animate-[spin_10s_linear_infinite]" />
                  </div>
-                 <div>
-                    <h3 className="text-xl font-black tracking-tight">Vérification de Conformité</h3>
-                    <p className="text-gray-400 font-medium text-xs">Vitesse de synchronisation : Temps réel</p>
+                 <div className="text-center">
+                    <h3 className="text-xl font-black text-gray-900 uppercase">Module en approche</h3>
+                    <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest mt-2">Cette section sera disponible dans la prochaine mise à jour.</p>
                  </div>
-              </div>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                 Le système SHEVA OS est configuré pour isoler vos données (Tenant Isolation). 
-                 Chaque transaction est signée et liée à votre identifiant d'entreprise privé.
-              </p>
-           </Card>
+              </Card>
+           )}
         </div>
       </div>
     </div>

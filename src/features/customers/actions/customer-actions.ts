@@ -6,9 +6,11 @@ import { revalidatePath } from "next/cache";
 export async function createCustomer(data: any) {
   const supabase = await createClient();
 
+  const { data: { user } } = await supabase.auth.getUser();
   const { data: userProfile } = await supabase
     .from("user_profiles")
     .select("tenant_id")
+    .eq("id", user?.id)
     .single();
 
   if (!userProfile?.tenant_id) {

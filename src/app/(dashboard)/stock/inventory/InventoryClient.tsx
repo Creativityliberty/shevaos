@@ -14,13 +14,33 @@ import {
   History,
   TrendingDown,
   AlertTriangle,
-  PackageSearch
+  PackageSearch,
+  Loader2,
+  Info
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger,
+  DialogFooter
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { createStockAdjustment } from "@/features/stock/actions/movement-actions";
 
 interface Props {
   initialInventory: any[];
@@ -29,6 +49,18 @@ interface Props {
 export function InventoryClient({ initialInventory }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [inventory, setInventory] = useState(initialInventory);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Dialog States
+  const [isAdjOpen, setIsAdjOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  
+  const [adjData, setAdjData] = useState({
+    type: "AJUSTEMENT",
+    quantity: "",
+    notes: ""
+  });
 
   const filteredInventory = inventory.filter(item => 
     item.products?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -40,6 +72,36 @@ export function InventoryClient({ initialInventory }: Props) {
     ruptureCount: inventory.filter(i => i.available_stock === 0).length,
     criticalCount: inventory.filter(i => i.available_stock > 0 && i.available_stock <= (i.products?.alert_threshold || 5)).length,
     totalItems: inventory.reduce((acc, curr) => acc + curr.total_stock, 0)
+  };
+
+  const handleAdjust = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedItem || !adjData.quantity) return;
+
+    setIsLoading(true);
+    try {
+      await createStockAdjustment({
+        product_id: selectedItem.product_id,
+        hub_id: selectedItem.hub_id,
+        type: adjData.type,
+        quantity: parseInt(adjData.quantity),
+        notes: adjData.notes
+      });
+      
+      toast.success("Stock ajusté avec succès");
+      setIsAdjOpen(false);
+      window.location.reload(); // Simple refresh for now
+    } catch (error: any) {
+      toast.error(error.message || "Erreur lors de l'ajustement");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const openAdjustment = (item: any, type: string) => {
+    setSelectedItem(item);
+    setAdjData({ ...adjData, type });
+    setIsAdjOpen(true);
   };
 
   return (
@@ -60,7 +122,17 @@ export function InventoryClient({ initialInventory }: Props) {
           <Button variant="outline" className="h-16 px-8 rounded-[2rem] border-gray-100 font-black gap-3 text-lg hover:bg-gray-50">
             <History className="w-6 h-6" /> HISTORIQUE
           </Button>
-          <Button className="h-16 px-8 rounded-[2rem] bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl shadow-indigo-200 font-black gap-3 text-lg">
+          <Button 
+            className="h-16 px-8 rounded-[2rem] bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl shadow-indigo-200 font-black gap-3 text-lg"
+            onClick={() => {
+               if (filteredInventory.length > 0) {
+                 setSelectedItem(filteredInventory[0]);
+                 setIsAdjOpen(true);
+               } else {
+                 toast.error("Aucun produit à ajuster");
+               }
+            }}
+          >
             <Plus className="w-6 h-6" /> AJUSTEMENT STOCK
           </Button>
         </div>
@@ -151,26 +223,31 @@ export function InventoryClient({ initialInventory }: Props) {
                       )}>
                         {isRupture ? "RUPTURE" : isCritical ? "CRITIQUE" : "EN STOCK"}
                       </Badge>
-                      <p className="text-[10px] font-bold text-gray-400 mt-2 uppercase tracking-tighter">Hub: {item.hubs?.name}</p>
+                      <button 
+                        onClick={() => { setSelectedItem(item); setIsDetailOpen(true); }}
+                        className="flex items-center gap-1 text-[10px] font-black text-indigo-500 uppercase tracking-widest mt-2 hover:underline ml-auto"
+                      >
+                         <Info className="w-3 h-3" /> Détails
+                      </button>
                    </div>
                 </div>
 
                 <div>
-                   <h3 className="text-xl font-black text-gray-900 group-hover:text-indigo-600 transition-colors truncate">{item.products?.name}</h3>
-                   <p className="text-xs font-bold text-gray-400 mt-1 tracking-widest uppercase">SKU: {item.products?.sku}</p>
+                   <h3 className="text-xl font-black text-gray-900 group-hover:text-indigo-600 transition-colors truncate uppercase">{item.products?.name}</h3>
+                   <p className="text-xs font-bold text-gray-400 mt-1 tracking-widest uppercase italic font-mono">SKU: {item.products?.sku}</p>
                 </div>
 
                 <div className="space-y-4">
                    <div className="flex justify-between items-end">
                       <div className="space-y-1">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Disponibilité</p>
-                        <div className="text-3xl font-black text-gray-900">
+                        <div className="text-3xl font-black text-gray-900 tabular-nums">
                           {item.available_stock} <span className="text-sm">unités</span>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Réservé</p>
-                        <p className="font-black text-orange-500">{item.reserved_stock} <span className="text-xs">U</span></p>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Hub: {item.hubs?.name}</p>
+                        <p className="font-black text-orange-500">{item.reserved_stock} <span className="text-xs font-bold">Réservé</span></p>
                       </div>
                    </div>
 
@@ -186,10 +263,18 @@ export function InventoryClient({ initialInventory }: Props) {
                 </div>
 
                 <div className="flex gap-2 pt-2">
-                   <Button variant="ghost" className="flex-1 rounded-2xl bg-gray-50 text-gray-500 font-bold text-xs uppercase hover:bg-indigo-50 hover:text-indigo-600 border border-transparent hover:border-indigo-100 transition-all">
+                   <Button 
+                    variant="ghost" 
+                    className="flex-1 rounded-2xl bg-gray-50 text-gray-500 font-black text-[10px] uppercase hover:bg-emerald-50 hover:text-emerald-600 border border-transparent hover:border-emerald-100 transition-all py-6"
+                    onClick={() => openAdjustment(item, 'ENTREE_FOURNISSEUR')}
+                   >
                      <ArrowDownToLine className="w-4 h-4 mr-2" /> Entrée
                    </Button>
-                   <Button variant="ghost" className="flex-1 rounded-2xl bg-gray-50 text-gray-500 font-bold text-xs uppercase hover:bg-orange-50 hover:text-orange-600 border border-transparent hover:border-orange-100 transition-all">
+                   <Button 
+                    variant="ghost" 
+                    className="flex-1 rounded-2xl bg-gray-50 text-gray-500 font-black text-[10px] uppercase hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-100 transition-all py-6"
+                    onClick={() => openAdjustment(item, 'AJUSTEMENT')}
+                   >
                      <ArrowUpFromLine className="w-4 h-4 mr-2" /> Sortie
                    </Button>
                 </div>
@@ -206,6 +291,137 @@ export function InventoryClient({ initialInventory }: Props) {
           );
         })}
       </div>
+
+      {/* Adjustment Dialog */}
+      <Dialog open={isAdjOpen} onOpenChange={setIsAdjOpen}>
+         <DialogContent className="rounded-[2.5rem] p-10 max-w-lg border-none">
+            <DialogHeader>
+               <DialogTitle className="text-2xl font-black uppercase tracking-tight">
+                  {adjData.type === 'ENTREE_FOURNISSEUR' ? 'Entrée de' : 'Ajustement'} <span className="text-indigo-600">Stock</span>
+               </DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleAdjust} className="space-y-6 pt-4">
+               <div>
+                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 pl-2">Produit sélectionné</p>
+                  <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 flex items-center gap-4">
+                     <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center">
+                        <PackageSearch className="w-5 h-5 text-gray-300" />
+                     </div>
+                     <p className="font-black text-gray-900 uppercase text-sm">{selectedItem?.products?.name}</p>
+                  </div>
+               </div>
+
+               <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Quantité</label>
+                     <Input 
+                        type="number" 
+                        placeholder="0" 
+                        className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-black text-xl"
+                        value={adjData.quantity}
+                        onChange={(e) => setAdjData({...adjData, quantity: e.target.value})}
+                        required
+                     />
+                  </div>
+                  <div className="space-y-1">
+                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Nature</label>
+                     <Select 
+                        value={adjData.type} 
+                        onValueChange={(val) => setAdjData({...adjData, type: val})}
+                     >
+                        <SelectTrigger className="h-14 rounded-2xl bg-gray-50/50 border-gray-100 font-bold">
+                           <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-2xl">
+                           <SelectItem value="ENTREE_FOURNISSEUR" className="font-bold">ENTRÉE (Achat)</SelectItem>
+                           <SelectItem value="RETOUR" className="font-bold">RETOUR CLIENT</SelectItem>
+                           <SelectItem value="AJUSTEMENT" className="font-bold">AJUSTEMENT (-/INVENTAIRE)</SelectItem>
+                           <SelectItem value="TRANSFERT_ENTREE" className="font-bold">TRANSFERT REÇU</SelectItem>
+                        </SelectContent>
+                     </Select>
+                  </div>
+               </div>
+
+               <div className="space-y-1">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Notes / Justification</label>
+                  <Textarea 
+                     placeholder="Ex: Arrivage cargaison #32, Erreur inventaire..." 
+                     className="rounded-2xl border-gray-100 bg-gray-50/50 min-h-[100px] font-medium"
+                     value={adjData.notes}
+                     onChange={(e) => setAdjData({...adjData, notes: e.target.value})}
+                  />
+               </div>
+
+               <Button 
+                type="submit" 
+                disabled={isLoading}
+                className="w-full h-16 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg transition-all shadow-xl shadow-indigo-100"
+               >
+                  {isLoading ? <Loader2 className="animate-spin" /> : "CONFIRMER L'OPÉRATION"}
+               </Button>
+            </form>
+         </DialogContent>
+      </Dialog>
+
+      {/* Product Detail Dialog */}
+      <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
+         <DialogContent className="rounded-[3rem] p-0 overflow-hidden border-none max-w-2xl bg-white shadow-2xl">
+            <div className="h-48 bg-gray-900 relative">
+               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+               <div className="absolute bottom-0 left-0 p-10 flex items-center gap-6">
+                  <div className="w-24 h-24 rounded-3xl bg-white border-4 border-gray-900 flex items-center justify-center overflow-hidden shadow-2xl">
+                    {selectedItem?.products?.image_url ? (
+                        <img src={selectedItem.products.image_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <PackageSearch className="w-10 h-10 text-gray-200" />
+                      )}
+                  </div>
+                  <div className="pb-2">
+                     <h2 className="text-3xl font-black text-white uppercase tracking-tight">{selectedItem?.products?.name}</h2>
+                     <p className="text-indigo-400 font-bold uppercase text-xs tracking-widest italic">{selectedItem?.products?.sku}</p>
+                  </div>
+               </div>
+            </div>
+            
+            <div className="p-10 space-y-8">
+               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="p-6 bg-gray-50 rounded-3xl border border-gray-100">
+                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Stock Total</p>
+                     <p className="text-2xl font-black text-gray-900">{selectedItem?.total_stock}</p>
+                  </div>
+                  <div className="p-6 bg-gray-50 rounded-3xl border border-gray-100 text-orange-600">
+                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">En livraison</p>
+                     <p className="text-2xl font-black">{selectedItem?.reserved_stock}</p>
+                  </div>
+                  <div className="p-6 bg-emerald-50 rounded-3xl border border-emerald-100 text-emerald-600">
+                     <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1">Disponible</p>
+                     <p className="text-2xl font-black">{selectedItem?.available_stock}</p>
+                  </div>
+                  <div className="p-6 bg-gray-50 rounded-3xl border border-gray-100">
+                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Seuil Alerte</p>
+                     <p className="text-2xl font-black text-gray-400">{selectedItem?.products?.alert_threshold || 5}</p>
+                  </div>
+               </div>
+
+               <div className="space-y-4">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-gray-900 border-b border-gray-100 pb-2">Informations Financières</h4>
+                  <div className="flex justify-between items-center h-16 bg-gray-50 rounded-2xl px-8 border border-gray-100 shrink-0">
+                     <span className="text-sm font-bold text-gray-500">Coût d'achat moyen (PAMP)</span>
+                     <span className="text-xl font-black text-gray-900">{(selectedItem?.products?.average_purchase_cost || 0).toLocaleString()} F</span>
+                  </div>
+               </div>
+
+               <div className="flex gap-4 pt-4 shrink-0">
+                  <Button variant="outline" className="flex-1 h-14 rounded-2xl border-gray-100 font-black">
+                     FAIRE UN TRANSFERT
+                  </Button>
+                  <Button className="flex-1 h-14 rounded-2xl bg-indigo-600 text-white font-black" onClick={() => setIsAdjOpen(true)}>
+                     AJUSTER LE STOCK
+                  </Button>
+               </div>
+            </div>
+         </DialogContent>
+      </Dialog>
     </div>
   );
 }

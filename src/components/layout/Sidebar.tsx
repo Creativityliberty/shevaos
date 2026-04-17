@@ -41,6 +41,12 @@ const NAV_ITEMS: NavItem[] = [
     roles: ["ceo", "manager", "super_admin"] 
   },
   { 
+    label: "Vision Stratégique", 
+    href: "/admin/vision", 
+    icon: TrendingUp, 
+    roles: ["ceo", "super_admin"] 
+  },
+  { 
     label: "Service Client", 
     href: "/orders", 
     icon: Headset, 
@@ -80,7 +86,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "Logistique", 
     href: "/dispatch", 
     icon: Truck, 
-    roles: ["ceo", "manager", "dispatcher", "ops_manager", "super_admin"] 
+    roles: ["ceo", "manager", "dispatcher", "ops_manager", "achats", "super_admin"],
+    children: [
+      { label: "Suivi Livraisons (Dispatch)", href: "/dispatch" },
+      { label: "Gestion Fournisseurs", href: "/logistique/fournisseurs" },
+      { label: "Arrivages Imports", href: "/logistique/import" },
+    ]
   },
   { 
     label: "Marketing", 

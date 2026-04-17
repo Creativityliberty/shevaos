@@ -19,7 +19,12 @@ export async function getExpenseCategories() {
 
 export async function createExpenseCategory(name: string, color: string = "bg-gray-100 text-gray-700") {
   const supabase = await createClient();
-  const { data: profile } = await supabase.from("user_profiles").select("tenant_id").single();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("tenant_id")
+    .eq("id", user?.id)
+    .single();
 
   const { data, error } = await supabase
     .from("expense_categories")
