@@ -11,8 +11,13 @@ export async function globalSearch(query: string) {
   // Search Orders
   const { data: orders } = await supabase
     .from("orders")
-    .select("id, tracking_number, customer_name, status")
-    .or(`tracking_number.ilike.${q},customer_name.ilike.${q}`)
+    .select(`
+      id, 
+      order_number, 
+      status, 
+      customer:customers(full_name)
+    `)
+    .or(`order_number.ilike.${q},customer.full_name.ilike.${q}`)
     .limit(5);
 
   // Search Products

@@ -113,8 +113,10 @@ export function SearchCommand() {
                 >
                   <ShoppingCart className="mr-2 h-4 w-4 text-primary" />
                   <div className="flex flex-col">
-                    <span className="font-bold">{order.tracking_number}</span>
-                    <span className="text-[10px] text-gray-400 uppercase">{order.customer_name} • {order.status}</span>
+                    <span className="font-bold">{order.order_number}</span>
+                    <span className="text-[10px] text-gray-400 uppercase">
+                      {order.customer?.full_name || "Client Inconnu"} • {order.status}
+                    </span>
                   </div>
                 </CommandItem>
               ))}

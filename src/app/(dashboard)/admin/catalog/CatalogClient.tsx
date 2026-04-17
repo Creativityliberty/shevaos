@@ -65,6 +65,7 @@ export function CatalogClient({ initialProducts }: Props) {
       buying_price: parseFloat(formData.get("buying_price") as string),
       min_stock_level: parseInt(formData.get("min_stock_level") as string),
       description: formData.get("description"),
+      image_url: formData.get("image_url"),
       is_active: true
     };
 
@@ -149,6 +150,10 @@ export function CatalogClient({ initialProducts }: Props) {
                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Coût d'Achat (F)</label>
                        <Input name="buying_price" type="number" defaultValue={editingProduct?.buying_price} required className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold text-red-500" />
                     </div>
+                    <div className="space-y-2 col-span-2">
+                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">URL de l'image</label>
+                       <Input name="image_url" defaultValue={editingProduct?.image_url} placeholder="https://..." className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold" />
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Description</label>
@@ -183,8 +188,12 @@ export function CatalogClient({ initialProducts }: Props) {
               <TableRow key={p.id} className="hover:bg-gray-50/30 border-gray-50 transition-colors">
                 <TableCell className="py-8 pl-10">
                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400">
-                         <Package className="w-6 h-6" />
+                      <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 overflow-hidden border border-gray-100">
+                         {p.image_url ? (
+                           <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
+                         ) : (
+                           <Package className="w-6 h-6" />
+                         )}
                       </div>
                       <div>
                          <div className="font-black text-gray-900 uppercase tracking-tight">{p.name}</div>
