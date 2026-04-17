@@ -206,7 +206,7 @@ export function DriverClient({ activeDeliveries, completedDeliveries }: { active
               </div>
               <DialogFooter className="grid grid-cols-2 gap-3">
                   <Button variant="ghost" onClick={() => setFailureDialogOpen(false)} className="h-12">Annuler</Button>
-                  <Button className="h-12 bg-red-500 text-white font-black" onClick={handleFail} disabled={!failureReason.trim() || isProcessing}>
+                  <Button className="h-12 bg-red-500 text-white font-black" onClick={handleFail} disabled={!failureReason.trim() || !!loadingAction}>
                     {loadingAction?.action === 'fail' ? <Loader2 className="animate-spin" /> : "SIGNALEZ ÉCHEC"}
                   </Button>
               </DialogFooter>
