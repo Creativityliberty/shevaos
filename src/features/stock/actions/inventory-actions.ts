@@ -8,7 +8,7 @@ export async function getInventory() {
     .from("stock_levels")
     .select(`
       *,
-      products (id, name, sku, alert_threshold, average_purchase_cost, image_url),
+      products (id, name, sku, alert_threshold, average_purchase_cost),
       hubs (name)
     `)
     .order("total_stock", { ascending: true });
@@ -28,8 +28,7 @@ export async function getStockAlerts() {
     .select(`
       *,
       products!inner (name, sku, alert_threshold)
-    `)
-    .filter("available_stock", "lte", "products.alert_threshold"); // Note: Filtre complexe, on va le faire en TS si besoin ou via une vue
+    `); // Note: Filtre complexe, on va le faire en TS si besoin ou via une vue
 
   if (error) {
     // Fallback safe: on verra dans le client
