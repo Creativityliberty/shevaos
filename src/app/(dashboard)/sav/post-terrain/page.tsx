@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { createClient } from "@/core/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { logCallAttempt, scheduleRecall, confirmFromSav } from "@/features/orders/actions/crm-actions";
 import {
   DropdownMenu,

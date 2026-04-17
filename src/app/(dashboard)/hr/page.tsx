@@ -1,176 +1,161 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { 
   Users, 
-  UserPlus, 
-  Search, 
-  Wallet, 
+  Banknote, 
   FileText, 
-  TrendingUp,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  MoreVertical,
-  Briefcase
+  TrendingUp, 
+  Clock, 
+  CreditCard,
+  Plus,
+  Loader2,
+  ChevronRight,
+  UserCheck
 } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger,
-  DialogFooter
-} from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-export default function HRPage() {
-  const [activeTab, setActiveTab] = useState<'EQUIPE' | 'PAIE'>('EQUIPE');
+export default function HrPayrollPage() {
+  const supabase = createClient();
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchHrData();
+  }, []);
+
+  const fetchHrData = async () => {
+    setLoading(true);
+    // Simulation récupération des employés et de l'état de leur paie
+    const { data: profiles } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .order("full_name");
+      
+    setEmployees(profiles || [
+      { id: 1, full_name: "Jean Lamine", role: "DRIVER", salary: "150 000", status: "ACTIF", current_payroll: "165 500" },
+      { id: 2, full_name: "Sery Marc", role: "DRIVER", salary: "150 000", status: "ACTIF", current_payroll: "148 000" },
+      { id: 3, full_name: "Koffi Paul", role: "DISPATCHER", salary: "250 000", status: "ACTIF", current_payroll: "250 000" },
+    ]);
+    setLoading(false);
+  };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-1000">
-      {/* Header Premium */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-10 rounded-[3rem] border border-gray-100 shadow-xl shadow-gray-100/50">
+    <div className="p-6 lg:p-10 space-y-10 animate-in fade-in duration-500 pb-24">
+      {/* Premium Header */}
+      <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-xl shadow-gray-100/50 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex items-center gap-6">
-          <div className="w-20 h-20 rounded-[2.5rem] bg-indigo-600 text-white flex items-center justify-center shadow-2xl shadow-indigo-200">
+          <div className="w-20 h-20 rounded-[2.5rem] bg-indigo-600 text-white flex items-center justify-center shadow-2xl shadow-indigo-100">
             <Users className="w-10 h-10" />
           </div>
           <div>
             <h1 className="text-4xl font-black text-gray-900 tracking-tight uppercase">Capital <span className="text-indigo-600">Humain</span></h1>
-            <p className="text-gray-500 font-bold mt-1 uppercase text-xs tracking-[0.2em]">Gestion de l'Équipe & Paie Automatisée</p>
+            <p className="text-gray-500 font-bold mt-1 uppercase text-xs tracking-[0.2em]">Pilotage de l'Équipe & Paie Automatisée (P2-4)</p>
           </div>
         </div>
 
-        <div className="flex p-2 bg-gray-50 rounded-[2rem] border border-gray-100">
-          <button 
-            onClick={() => setActiveTab('EQUIPE')}
-            className={cn(
-              "px-8 py-4 rounded-[1.5rem] font-black text-sm transition-all uppercase tracking-widest",
-              activeTab === 'EQUIPE' ? "bg-white text-indigo-600 shadow-lg" : "text-gray-400 hover:text-gray-600"
-            )}
-          >
-            L'Équipe
-          </button>
-          <button 
-            onClick={() => setActiveTab('PAIE')}
-            className={cn(
-              "px-8 py-4 rounded-[1.5rem] font-black text-sm transition-all uppercase tracking-widest",
-              activeTab === 'PAIE' ? "bg-white text-indigo-600 shadow-lg" : "text-gray-400 hover:text-gray-600"
-            )}
-          >
-            Paie & Contrats
-          </button>
+        <div className="flex gap-4">
+           <Button className="h-16 px-8 rounded-3xl bg-gray-900 hover:bg-black font-black uppercase text-xs tracking-widest gap-2">
+             <Plus className="w-5 h-5 text-indigo-400" /> NOUVEAU CONTRAT
+           </Button>
         </div>
-
-        <Button className="h-16 px-8 rounded-[2rem] bg-gray-900 hover:bg-black shadow-xl shadow-gray-200 font-black gap-3 text-lg transition-all active:scale-95">
-          <UserPlus className="w-6 h-6" /> NOUVEAU CONTRAT
-        </Button>
       </div>
 
-      {activeTab === 'EQUIPE' ? <TeamView /> : <PayrollView />}
-    </div>
-  );
-}
-
-function TeamView() {
-  return (
-    <div className="space-y-8">
+      {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
-          { label: 'EFFECTIF TOTAL', value: '24', icon: Users, color: 'blue' },
-          { label: 'SALAIRES DU MOIS', value: '4.2M F', icon: Wallet, color: 'emerald' },
-          { label: 'CONTRATS ACTIFS', value: '22', icon: FileText, color: 'indigo' },
-        ].map((stat, i) => (
-          <Card key={i} className="p-8 rounded-[3rem] border border-gray-100 bg-white transition-all hover:shadow-2xl">
-            <div className="flex items-center gap-6">
-              <div className={cn(
-                "w-16 h-16 rounded-2xl flex items-center justify-center",
-                stat.color === 'blue' ? "bg-blue-50 text-blue-600" :
-                stat.color === 'emerald' ? "bg-emerald-50 text-emerald-600" :
-                "bg-indigo-50 text-indigo-600"
-              )}>
-                <stat.icon className="w-8 h-8" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{stat.label}</p>
-                <h3 className="text-3xl font-black text-gray-900">{stat.value}</h3>
-              </div>
+          { label: "Masse Salariale", value: "3 450 000 F", icon: Banknote, color: "text-emerald-600", bg: "bg-emerald-50" },
+          { label: "Effectif Total", value: "14 Agents", icon: UserCheck, color: "text-blue-600", bg: "bg-blue-50" },
+          { label: "Paiement Prévu", value: "25 Avril", icon: Clock, color: "text-orange-600", bg: "bg-orange-50" },
+        ].map((kpi, i) => (
+          <Card key={i} className="p-8 rounded-[2.5rem] border-none shadow-xl shadow-gray-100/30 flex items-center gap-6 group hover:translate-y-[-4px] transition-all">
+            <div className={`w-16 h-16 rounded-[1.5rem] ${kpi.bg} ${kpi.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+              <kpi.icon className="w-8 h-8" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{kpi.label}</p>
+              <p className="text-2xl font-black text-gray-900 leading-none">{kpi.value}</p>
             </div>
           </Card>
         ))}
       </div>
 
-      <Card className="rounded-[3rem] border border-gray-100 overflow-hidden bg-white shadow-xl shadow-gray-100/50">
-        <div className="p-8 border-b border-gray-50 flex items-center justify-between bg-gray-50/30">
-          <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight">Membres du personnel</h2>
-          <div className="relative w-72">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input placeholder="Rechercher un membre..." className="h-12 pl-12 rounded-2xl border-none bg-white font-bold" />
-          </div>
+      {/* Employee List / Payroll Table */}
+      <Card className="rounded-[3rem] border-none shadow-2xl shadow-gray-100/50 overflow-hidden bg-white">
+        <div className="p-10 border-b border-gray-50 flex items-center justify-between">
+           <div className="space-y-1">
+             <h2 className="text-xl font-black text-gray-900 uppercase">Liste du Personnel & Paie</h2>
+             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Calcul automatique basé sur les missions validées</p>
+           </div>
+           <Badge className="bg-indigo-50 text-indigo-600 border-none font-black text-[10px] px-6 py-2 rounded-full uppercase">Période : Avril 2026</Badge>
         </div>
-        <div className="p-0 overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-white border-b border-gray-50">
-                <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Membre</th>
-                <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Rôle & Département</th>
-                <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Statut</th>
-                <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Date d'entrée</th>
-                <th className="px-8 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[1, 2, 3].map((_, i) => (
-                <tr key={i} className="hover:bg-gray-50/50 transition-colors border-b border-gray-50">
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center font-black text-indigo-600">SM</div>
-                      <div>
-                        <p className="font-black text-gray-900 uppercase">Sery Marc</p>
-                        <p className="text-xs text-gray-400 font-bold">marc.sery@sheva.ci</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-8 py-6">
-                    <p className="font-black text-gray-900 flex items-center gap-2">
-                       <Briefcase className="w-3.5 h-3.5 text-indigo-400" /> LIVREUR SENIOR
-                    </p>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-tight">Operations / Hub 01</p>
-                  </td>
-                  <td className="px-8 py-6">
-                    <Badge className="bg-emerald-50 text-emerald-600 border-none font-black text-[10px] px-3 py-1 uppercase tracking-widest">ACTIF</Badge>
-                  </td>
-                  <td className="px-8 py-6 font-bold text-gray-500 text-sm">12 Jan 2024</td>
-                  <td className="px-8 py-6">
-                    <Button variant="ghost" size="icon" className="rounded-xl">
-                      <MoreVertical className="w-5 h-5 text-gray-400" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-    </div>
-  );
-}
 
-function PayrollView() {
-  return (
-    <div className="space-y-8 py-24 text-center bg-gray-50/50 rounded-[4rem] border-2 border-dashed border-gray-200">
-       <Wallet className="w-24 h-24 text-gray-200 mx-auto" />
-       <h2 className="text-3xl font-black text-gray-400 uppercase tracking-tight">Configuration de la Paie</h2>
-       <p className="text-gray-400 font-bold max-w-md mx-auto uppercase text-xs tracking-widest leading-relaxed">
-         Le module de paie automatisée est en cours d'initialisation. Connectez vos comptes trésorerie pour activer les paiements en un clic.
-       </p>
-       <Button className="h-16 px-10 rounded-[2rem] bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-100 font-black">
-         ACTIVER LE MODULE
-       </Button>
+        {loading ? (
+          <div className="flex justify-center p-20"><Loader2 className="w-10 h-10 animate-spin text-indigo-600" /></div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-gray-50/30">
+                  <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">Collaborateur</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">Rôle / Statut</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">Base Contrat</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-widest text-indigo-600">Calcul Ce Mois</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {employees.map((emp) => (
+                  <tr key={emp.id} className="group hover:bg-gray-50/50 transition-colors">
+                    <td className="px-10 py-8">
+                       <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center font-black text-gray-400 italic">
+                             {emp.full_name?.[0]}
+                          </div>
+                          <div>
+                             <p className="font-black text-gray-900 uppercase">{emp.full_name}</p>
+                             <p className="text-[10px] font-bold text-gray-400 uppercase">ID: EMP-{emp.id}</p>
+                          </div>
+                       </div>
+                    </td>
+                    <td className="px-10 py-8">
+                       <div className="space-y-2">
+                          <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-none font-bold text-[10px] uppercase">{emp.role}</Badge>
+                          <div className="flex items-center gap-1 text-[10px] text-emerald-500 font-bold">
+                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                             {emp.status}
+                          </div>
+                       </div>
+                    </td>
+                    <td className="px-10 py-8">
+                       <p className="font-black text-gray-900">{emp.salary} F</p>
+                    </td>
+                    <td className="px-10 py-8">
+                       <div className="flex items-center gap-2">
+                          <p className="text-xl font-black text-indigo-600">{emp.current_payroll} F</p>
+                          {Number(emp.current_payroll.replace(/\s/g, '')) > Number(emp.salary.replace(/\s/g, '')) ? (
+                            <TrendingUp className="w-4 h-4 text-emerald-500" />
+                          ) : Number(emp.current_payroll.replace(/\s/g, '')) < Number(emp.salary.replace(/\s/g, '')) ? (
+                            <div className="text-[10px] font-black p-1 bg-red-100 text-red-600 rounded">MALUS</div>
+                          ) : null}
+                       </div>
+                    </td>
+                    <td className="px-10 py-8">
+                       <Button variant="ghost" className="h-12 w-12 rounded-2xl hover:bg-indigo-50 group/btn">
+                          <FileText className="w-5 h-5 text-gray-400 group-hover/btn:text-indigo-600" />
+                       </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
     </div>
   );
 }

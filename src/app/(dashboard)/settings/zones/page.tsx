@@ -1,34 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   MapPin, 
-  Map, 
   Plus, 
   Search, 
   Settings2,
   Building2,
-  DollarSign,
-  ChevronRight,
   MoreVertical,
-  Globe
+  Loader2
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 export default function ZonesSettingsPage() {
+  const supabase = createClient();
   const [searchTerm, setSearchTerm] = useState("");
+  const [zones, setZones] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const zones = [
-    { id: 1, sector: "Abidjan Sud", fees: 0, hub: "Global", type: "COMMUNE" },
-    { id: 2, sector: "Yopougon", fees: 1000, hub: "Hub Ouest", type: "COMMUNE" },
-    { id: 3, sector: "Cocody", fees: 1000, hub: "Hub Est", type: "COMMUNE" },
-    { id: 4, sector: "Bingerville", fees: 1500, hub: "Hub Est", type: "PÉRIPHÉRIE" },
-    { id: 5, sector: "Bouaké", fees: 3000, hub: "Hub Nord", type: "INTÉRIEUR" },
-  ];
+  useEffect(() => {
+    fetchZones();
+  }, []);
+
+  const fetchZones = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("zones")
+      .select("*, hubs(name)")
+      .order("name", { ascending: true });
+
+    if (error) toast.error("Erreur de chargement");
+    else setZones(data || []);
+    setLoading(false);
+  };
+
+  const filteredZones = zones.filter(z => 
+    z.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    z.hubs?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="space-y-10 animate-in fade-in duration-1000 pb-24">
@@ -39,7 +54,7 @@ export default function ZonesSettingsPage() {
             <Settings2 className="w-10 h-10" />
           </div>
           <div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight uppercase tracking-widest">Config. <span className="text-primary">Système</span></h1>
+            <h1 className="text-4xl font-black text-gray-900 tracking-tight uppercase">Config. <span className="text-primary">Système</span></h1>
             <p className="text-gray-500 font-bold mt-1 uppercase text-xs tracking-[0.2em]">Infrastructure E-commerce et Trésorerie</p>
           </div>
         </div>
@@ -101,56 +116,60 @@ export default function ZonesSettingsPage() {
                  </div>
               </div>
 
-              <div className="overflow-x-auto">
-                 <table className="w-full text-left border-collapse">
-                    <thead>
-                       <tr className="bg-white border-b border-gray-50">
-                          <th className="px-10 py-8 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Secteur</th>
-                          <th className="px-10 py-8 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Frais de Livraison</th>
-                          <th className="px-10 py-8 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Hub Rattaché</th>
-                          <th className="px-10 py-8 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Actions</th>
-                       </tr>
-                    </thead>
-                    <tbody>
-                       {zones.filter(z => z.sector.toLowerCase().includes(searchTerm.toLowerCase())).map((zone) => (
-                          <tr key={zone.id} className="hover:bg-gray-50/30 transition-colors border-b border-gray-50">
-                             <td className="px-10 py-8">
-                                <div className="flex items-center gap-4">
-                                   <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400">
-                                      <MapPin className="w-6 h-6" />
-                                   </div>
-                                   <div>
-                                      <p className="font-black text-gray-900 uppercase">{zone.sector}</p>
-                                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{zone.type}</p>
-                                   </div>
-                                </div>
-                             </td>
-                             <td className="px-10 py-8">
-                                <div className="inline-flex items-center px-6 py-3 rounded-2xl bg-emerald-50 text-emerald-600 font-black text-lg">
-                                   {zone.fees.toLocaleString()} F
-                                </div>
-                             </td>
-                             <td className="px-10 py-8">
-                                <div className="flex items-center gap-2">
-                                   <Building2 className="w-4 h-4 text-gray-400" />
-                                   <span className="font-bold text-gray-700 uppercase text-xs tracking-widest">{zone.hub}</span>
-                                </div>
-                             </td>
-                             <td className="px-10 py-8">
-                                <div className="flex gap-2">
-                                   <Button variant="ghost" size="icon" className="rounded-xl hover:bg-white hover:shadow-md">
-                                      <Settings2 className="w-5 h-5 text-gray-400" />
-                                   </Button>
-                                   <Button variant="ghost" size="icon" className="rounded-xl hover:bg-white hover:shadow-md">
-                                      <MoreVertical className="w-5 h-5 text-gray-400" />
-                                   </Button>
-                                </div>
-                             </td>
-                          </tr>
-                       ))}
-                    </tbody>
-                 </table>
-              </div>
+              {loading ? (
+                <div className="flex justify-center p-20"><Loader2 className="w-10 h-10 animate-spin text-primary" /></div>
+              ) : (
+                <div className="overflow-x-auto">
+                   <table className="w-full text-left border-collapse">
+                      <thead>
+                         <tr className="bg-white border-b border-gray-50">
+                            <th className="px-10 py-8 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Secteur</th>
+                            <th className="px-10 py-8 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Frais de Livraison</th>
+                            <th className="px-10 py-8 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Hub Rattaché</th>
+                            <th className="px-10 py-8 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Actions</th>
+                         </tr>
+                      </thead>
+                      <tbody>
+                         {filteredZones.map((zone) => (
+                            <tr key={zone.id} className="hover:bg-gray-50/30 transition-colors border-b border-gray-50">
+                               <td className="px-10 py-8">
+                                  <div className="flex items-center gap-4">
+                                     <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400">
+                                        <MapPin className="w-6 h-6" />
+                                     </div>
+                                     <div>
+                                        <p className="font-black text-gray-900 uppercase">{zone.name}</p>
+                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{zone.type || 'COMMUNE'}</p>
+                                     </div>
+                                  </div>
+                               </td>
+                               <td className="px-10 py-8">
+                                  <div className="inline-flex items-center px-6 py-3 rounded-2xl bg-emerald-50 text-emerald-600 font-black text-lg">
+                                     {Number(zone.delivery_fee || 0).toLocaleString()} F
+                                  </div>
+                               </td>
+                               <td className="px-10 py-8">
+                                  <div className="flex items-center gap-2">
+                                     <Building2 className="w-4 h-4 text-gray-400" />
+                                     <span className="font-bold text-gray-700 uppercase text-xs tracking-widest">{zone.hubs?.name || 'GLOBAL'}</span>
+                                  </div>
+                               </td>
+                               <td className="px-10 py-8">
+                                  <div className="flex gap-2">
+                                     <Button variant="ghost" size="icon" className="rounded-xl hover:bg-white hover:shadow-md">
+                                        <Settings2 className="w-5 h-5 text-gray-400" />
+                                     </Button>
+                                     <Button variant="ghost" size="icon" className="rounded-xl hover:bg-white hover:shadow-md">
+                                        <MoreVertical className="w-5 h-5 text-gray-400" />
+                                     </Button>
+                                  </div>
+                               </td>
+                            </tr>
+                         ))}
+                      </tbody>
+                   </table>
+                </div>
+              )}
            </Card>
         </div>
       </div>
