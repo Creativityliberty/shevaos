@@ -34,7 +34,7 @@ export function LoginForm() {
   const supabase = createClient();
 
   const form = useForm<LoginValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema) as any,
     defaultValues: {
       email: "",
       password: "",

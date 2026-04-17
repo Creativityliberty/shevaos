@@ -41,7 +41,7 @@ export function SignupForm() {
     const supabase = createClient();
 
     const form = useForm<SignupValues>({
-        resolver: zodResolver(signupSchema),
+        resolver: zodResolver(signupSchema) as any,
         defaultValues: {
             fullName: "",
             email: "",
