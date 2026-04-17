@@ -24,7 +24,7 @@ export function CreateCustomerForm({ zones }: { zones: any[] }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<CustomerFormValues>({
-    resolver: zodResolver(customerSchema),
+    resolver: zodResolver(customerSchema) as any,
     defaultValues: {
       full_name: "",
       phone: "",

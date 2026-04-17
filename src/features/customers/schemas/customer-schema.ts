@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 
 export const customerSchema = z.object({
   full_name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
