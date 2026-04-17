@@ -162,7 +162,7 @@ export function ClosingClient() {
                             placeholder="Saisir montant..."
                             className="bg-transparent border-none p-0 text-4xl font-black h-auto focus-visible:ring-0 placeholder:text-gray-200"
                             value={actualAmount}
-                            onChange={(e) => setActualAmount(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setActualAmount(e.target.value)}
                             required
                             disabled={currentClosing.status === 'VALIDÉ'}
                           />
@@ -200,7 +200,7 @@ export function ClosingClient() {
                       placeholder="Commentaires sur la session de caisse..."
                       className="w-full min-h-[120px] rounded-[1.5rem] bg-gray-50 border-gray-100 p-6 font-bold text-gray-900 focus:bg-white transition-all focus:ring-primary focus:border-primary border-2"
                       value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes(e.target.value)}
                       disabled={currentClosing.status === 'VALIDÉ'}
                     />
                  </div>
@@ -231,7 +231,7 @@ export function ClosingClient() {
            </div>
            
            <div className="space-y-4">
-              {history.map((close) => (
+              {history.map((close: any) => (
                 <Card key={close.id} className="p-6 rounded-[2rem] border-gray-100 bg-white hover:shadow-lg transition-all group border-l-4 border-l-gray-900">
                    <div className="flex items-start justify-between">
                       <div>

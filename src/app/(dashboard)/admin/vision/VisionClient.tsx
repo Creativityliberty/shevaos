@@ -16,7 +16,8 @@ import {
   Zap,
   Star,
   DollarSign,
-  AlertTriangle
+  AlertTriangle,
+  Clock
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

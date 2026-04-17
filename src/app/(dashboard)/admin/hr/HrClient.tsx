@@ -74,7 +74,7 @@ export function HrClient({ initialContracts, initialPayrolls }: Props) {
              <Briefcase className="w-7 h-7" />
            </div>
            <div>
-             <div className="text-2xl font-black text-gray-900">{contracts.filter(c => c.user_profiles?.role === 'driver').length}</div>
+             <div className="text-2xl font-black text-gray-900">{contracts.filter((c: any) => c.user_profiles?.role === 'driver').length}</div>
              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Logistique (Drivers)</div>
            </div>
         </Card>
@@ -84,7 +84,7 @@ export function HrClient({ initialContracts, initialPayrolls }: Props) {
            </div>
            <div>
              <div className="text-2xl font-black text-gray-900">
-               {contracts.reduce((acc, curr) => acc + (Number(curr.base_salary) || 0), 0).toLocaleString()} <span className="text-xs">F</span>
+               {contracts.reduce((acc: number, curr: any) => acc + (Number(curr.base_salary) || 0), 0).toLocaleString()} <span className="text-xs">F</span>
              </div>
              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Masse Salariale Fixe</div>
            </div>
@@ -112,13 +112,13 @@ export function HrClient({ initialContracts, initialPayrolls }: Props) {
                 placeholder="Rechercher un membre..." 
                 className="pl-11 rounded-2xl border-gray-100 bg-white font-bold"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {contracts.map((contract) => (
+            {contracts.map((contract: any) => (
               <Card key={contract.id} className="p-8 rounded-[3rem] border-gray-50 bg-white hover:border-emerald-100 transition-all group overflow-hidden relative">
                 <div className="space-y-6 relative z-10">
                   <div className="flex justify-between items-start">
@@ -169,7 +169,7 @@ export function HrClient({ initialContracts, initialPayrolls }: Props) {
              </div>
 
              <div className="space-y-6 relative z-10">
-                {payrolls.map((payroll) => (
+                {payrolls.map((payroll: any) => (
                   <div key={payroll.id} className="flex justify-between items-center py-4 border-b border-gray-800 last:border-0">
                     <div className="space-y-1">
                       <p className="text-sm font-black uppercase text-gray-100 truncate max-w-[150px]">{payroll.user_profiles?.full_name}</p>

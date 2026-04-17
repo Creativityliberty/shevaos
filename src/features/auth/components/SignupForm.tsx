@@ -94,7 +94,7 @@ export function SignupForm() {
                 <FormField
                     control={form.control}
                     name="fullName"
-                    render={({ field }) => (
+                    render={({ field }: { field: any }) => (
                         <FormItem>
                             <FormLabel className="text-gray-700">Nom complet</FormLabel>
                             <FormControl>
@@ -115,7 +115,7 @@ export function SignupForm() {
                 <FormField
                     control={form.control}
                     name="email"
-                    render={({ field }) => (
+                    render={({ field }: { field: any }) => (
                         <FormItem>
                             <FormLabel className="text-gray-700">Email professionnel</FormLabel>
                             <FormControl>
@@ -136,7 +136,7 @@ export function SignupForm() {
                 <FormField
                     control={form.control}
                     name="role"
-                    render={({ field }) => (
+                    render={({ field }: { field: any }) => (
                         <FormItem>
                             <FormLabel className="text-gray-700">Rôle (Privilèges)</FormLabel>
                             <Select onValueChange={(val: any) => field.onChange(val)} defaultValue={field.value}>
@@ -163,7 +163,7 @@ export function SignupForm() {
                 <FormField
                     control={form.control}
                     name="password"
-                    render={({ field }) => (
+                    render={({ field }: { field: any }) => (
                         <FormItem>
                             <FormLabel className="text-gray-700">Mot de passe</FormLabel>
                             <FormControl>
@@ -185,7 +185,7 @@ export function SignupForm() {
                 <FormField
                     control={form.control}
                     name="confirmPassword"
-                    render={({ field }) => (
+                    render={({ field }: { field: any }) => (
                         <FormItem>
                             <FormLabel className="text-gray-700">Confirmer le mot de passe</FormLabel>
                             <FormControl>

@@ -103,7 +103,7 @@ export function ExpenseClient({ initialExpenses, initialCategories }: Props) {
     }
   };
 
-  const totalMonthly = initialExpenses.reduce((acc, curr) => acc + parseFloat(curr.amount), 0);
+  const totalMonthly = initialExpenses.reduce((acc: number, curr: any) => acc + parseFloat(curr.amount), 0);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700 pb-20">
@@ -162,7 +162,7 @@ export function ExpenseClient({ initialExpenses, initialCategories }: Props) {
                      placeholder="0"
                      className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 text-2xl font-black focus:ring-red-500 text-red-500"
                      value={formData.amount}
-                     onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, amount: e.target.value})}
                      required
                    />
                  </div>
@@ -180,7 +180,7 @@ export function ExpenseClient({ initialExpenses, initialCategories }: Props) {
                             <SelectValue placeholder="Choisir..." />
                           </SelectTrigger>
                           <SelectContent className="rounded-2xl">
-                            {categories.map((cat) => (
+                            {categories.map((cat: any) => (
                               <SelectItem key={cat.id} value={cat.name} className="font-bold py-3">{cat.name}</SelectItem>
                             ))}
                           </SelectContent>
@@ -202,7 +202,7 @@ export function ExpenseClient({ initialExpenses, initialCategories }: Props) {
                        type="date" 
                        className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold"
                        value={formData.expense_date}
-                       onChange={(e) => setFormData({...formData, expense_date: e.target.value})}
+                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, expense_date: e.target.value})}
                        required
                      />
                    </div>
@@ -214,7 +214,7 @@ export function ExpenseClient({ initialExpenses, initialCategories }: Props) {
                      placeholder="Ex: Facture CIE, Salaire Lionel..."
                      className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 font-bold"
                      value={formData.description}
-                     onChange={(e) => setFormData({...formData, description: e.target.value})}
+                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, description: e.target.value})}
                    />
                  </div>
 
@@ -238,7 +238,7 @@ export function ExpenseClient({ initialExpenses, initialCategories }: Props) {
         <div className="space-y-8 animate-in slide-in-from-left-4 duration-500">
           <div className="flex flex-wrap items-center gap-3 px-8 py-4 bg-gray-50/50 rounded-[2rem] border border-gray-100/50">
             <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest mr-2">Analyse par Nature :</span>
-            {categories.map((cat) => (
+            {categories.map((cat: any) => (
               <Badge key={cat.id} className={cn("rounded-xl border-none font-black text-[10px] uppercase tracking-widest px-5 py-2.5 shadow-sm transition-all hover:scale-105", cat.color || "bg-white text-gray-600")}>
                 {cat.name}
               </Badge>
@@ -287,8 +287,8 @@ export function ExpenseClient({ initialExpenses, initialCategories }: Props) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50 pb-10">
-                  {initialExpenses.map((expense) => {
-                    const categoryInfo = categories.find(c => c.name === expense.category) || { name: expense.category, color: "bg-gray-100 text-gray-700" };
+                  {initialExpenses.map((expense: any) => {
+                    const categoryInfo = categories.find((c: any) => c.name === expense.category) || { name: expense.category, color: "bg-gray-100 text-gray-700" };
                     return (
                       <tr key={expense.id} className="group hover:bg-gray-50/50 transition-colors">
                         <td className="px-10 py-8">
