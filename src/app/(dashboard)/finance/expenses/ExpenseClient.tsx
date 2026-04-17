@@ -142,11 +142,13 @@ export function ExpenseClient({ initialExpenses, initialCategories }: Props) {
            </div>
            
            <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-              <DialogTrigger asChild>
-                <Button className="h-14 px-8 rounded-2xl bg-red-500 hover:bg-black text-white font-black shadow-xl shadow-red-100 transition-all active:scale-95 flex gap-3">
-                  <Plus className="w-5 h-5" /> NOUVELLE DÉPENSE
-                </Button>
-              </DialogTrigger>
+             <DialogTrigger 
+               render={
+                 <Button className="h-14 px-8 rounded-2xl bg-red-500 hover:bg-black text-white font-black shadow-xl shadow-red-100 transition-all active:scale-95 flex gap-3">
+                   <Plus className="w-5 h-5" /> NOUVELLE DÉPENSE
+                 </Button>
+               }
+             />
 
              <DialogContent className="sm:max-w-[500px] rounded-[2.5rem] p-8">
                <DialogHeader>

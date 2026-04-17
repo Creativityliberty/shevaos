@@ -114,11 +114,13 @@ export function CatalogClient({ initialProducts }: Props) {
            </div>
            
            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={() => setEditingProduct(null)} className="h-14 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-black font-black gap-2 shadow-lg shadow-orange-100 transition-all active:scale-95">
-                   <Plus className="w-5 h-5" /> NOUVEAU PRODUIT
-                </Button>
-              </DialogTrigger>
+              <DialogTrigger 
+                render={
+                  <Button onClick={() => setEditingProduct(null)} className="h-14 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-black font-black gap-2 shadow-lg shadow-orange-100 transition-all active:scale-95">
+                    <Plus className="w-5 h-5" /> NOUVEAU PRODUIT
+                  </Button>
+                }
+              />
               <DialogContent className="sm:max-w-[600px] rounded-[2.5rem] p-10">
                 <DialogHeader>
                   <DialogTitle className="text-3xl font-black uppercase tracking-tight">

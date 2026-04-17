@@ -118,11 +118,13 @@ export function ZoneSettings() {
         </div>
 
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-          <DialogTrigger asChild>
-             <Button className="h-12 px-6 rounded-2xl bg-black text-white hover:bg-gray-800 font-black gap-2 shadow-xl shadow-gray-100 transition-all active:scale-95">
-              <Plus className="w-5 h-5" /> AJOUTER UNE ZONE
-            </Button>
-          </DialogTrigger>
+          <DialogTrigger 
+            render={
+              <Button className="h-12 px-6 rounded-2xl bg-black text-white hover:bg-gray-800 font-black gap-2 shadow-xl shadow-gray-100 transition-all active:scale-95">
+                <Plus className="w-5 h-5" /> AJOUTER UNE ZONE
+              </Button>
+            }
+          />
           <DialogContent className="rounded-[2.5rem] p-10 max-w-md border-none">
             <DialogHeader>
                <DialogTitle className="text-2xl font-black uppercase">Configuration <span className="text-primary">Zone</span></DialogTitle>
