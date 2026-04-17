@@ -135,11 +135,13 @@ export function ExpenseTemplates() {
            </Button>
 
            <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="h-9 rounded-xl font-bold gap-2">
-                <Plus className="w-4 h-4" /> NOUVEAU MODÈLE
-              </Button>
-            </DialogTrigger>
+            <DialogTrigger
+              render={
+                <Button size="sm" className="h-9 rounded-xl font-bold gap-2">
+                  <Plus className="w-4 h-4" /> NOUVEAU MODÈLE
+                </Button>
+              }
+            />
             <DialogContent className="rounded-[2.5rem] p-10 max-w-md border-none">
               <DialogHeader>
                  <DialogTitle className="text-2xl font-black uppercase">Frais <span className="text-primary">Récurrent</span></DialogTitle>

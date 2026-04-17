@@ -87,11 +87,13 @@ export function FournisseursClient({ initialSuppliers }: Props) {
 
         <div className="flex gap-4">
            <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-              <DialogTrigger asChild>
-                <Button className="h-16 px-8 rounded-[2rem] bg-gray-900 hover:bg-black shadow-xl shadow-gray-200 font-black gap-3 text-lg">
-                  <Plus className="w-6 h-6" /> NOUVEAU AGENT
-                </Button>
-              </DialogTrigger>
+              <DialogTrigger
+                render={
+                  <Button className="h-16 px-8 rounded-[2rem] bg-gray-900 hover:bg-black shadow-xl shadow-gray-200 font-black gap-3 text-lg">
+                    <Plus className="w-6 h-6" /> NOUVEAU AGENT
+                  </Button>
+                }
+              />
               <DialogContent className="rounded-[2.5rem] p-10 max-w-lg">
                  <DialogHeader>
                     <DialogTitle className="text-2xl font-black uppercase">Nouveau <span className="text-primary">Fournisseur</span></DialogTitle>
