@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default async function CeoDashboard() {
   const supabase = await createClient();
-  
+
   // Appeler les RPCs de performance
   const [
     { data: metrics },
@@ -28,17 +28,17 @@ export default async function CeoDashboard() {
     daily_revenue: []
   };
 
-  const health = perfReport || { 
-    verified_revenue: 0, 
-    other_expenses: 0, 
+  const health = perfReport || {
+    verified_revenue: 0,
+    other_expenses: 0,
     marketing_spend: 0,
-    net_profit: 0, 
+    net_profit: 0,
     success_rate: 0,
     order_count: 0,
     roas: 0
   };
 
-  const lowStockCount = products?.filter((p: any) => p.available_stock <= p.min_stock_level).length || 0;
+  const lowStockCount = products?.filter(p => p.available_stock <= p.min_stock_level).length || 0;
 
   return (
     <div className="max-w-7xl mx-auto space-y-10">
@@ -59,7 +59,7 @@ export default async function CeoDashboard() {
 
       {/* KPIs Principaux */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        
+
         {/* CA Vérifié — LE KPI ROI */}
         <Link href="/finance/deposits">
           <Card className="p-6 rounded-[2.5rem] border-2 border-primary bg-primary/[0.02] hover:shadow-2xl hover:shadow-orange-200 transition-all group cursor-pointer relative overflow-hidden h-full">
@@ -218,39 +218,39 @@ export default async function CeoDashboard() {
         </div>
 
         <Card className="lg:col-span-2 p-8 rounded-[2.5rem] border-gray-100 shadow-sm bg-white overflow-hidden text-left relative h-full">
-           <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase">Activité Récente</h3>
-              <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full">Evolution Quotidienne</div>
-           </div>
-           
-           <div className="flex items-end justify-between h-48 gap-3">
-              {stats.daily_revenue && stats.daily_revenue.length > 0 ? (
-                stats.daily_revenue.map((day: any, i: number) => {
-                  const maxRevenue = Math.max(...stats.daily_revenue.map((d: any) => d.revenue || 1));
-                  const height = (day.revenue / maxRevenue) * 100;
-                  return (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-3 group h-full justify-end">
-                      <div className="relative w-full flex flex-col justify-end h-full">
-                        <div 
-                          className="w-full bg-gray-100 group-hover:bg-primary/20 rounded-xl transition-all duration-500"
-                          style={{ height: `${Math.max(height, 5)}%` }}
-                        ></div>
-                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-all shadow-xl whitespace-nowrap z-50 scale-0 group-hover:scale-100">
-                          {day.revenue.toLocaleString('fr-FR')} F
-                        </div>
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase">Activité Récente</h3>
+            <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full">Evolution Quotidienne</div>
+          </div>
+
+          <div className="flex items-end justify-between h-48 gap-3">
+            {stats.daily_revenue && stats.daily_revenue.length > 0 ? (
+              stats.daily_revenue.map((day: any, i: number) => {
+                const maxRevenue = Math.max(...stats.daily_revenue.map((d: any) => d.revenue || 1));
+                const height = (day.revenue / maxRevenue) * 100;
+                return (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-3 group h-full justify-end">
+                    <div className="relative w-full flex flex-col justify-end h-full">
+                      <div
+                        className="w-full bg-gray-100 group-hover:bg-primary/20 rounded-xl transition-all duration-500"
+                        style={{ height: `${Math.max(height, 5)}%` }}
+                      ></div>
+                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-all shadow-xl whitespace-nowrap z-50 scale-0 group-hover:scale-100">
+                        {day.revenue.toLocaleString('fr-FR')} F
                       </div>
-                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter truncate w-full text-center">
-                        {new Date(day.date).toLocaleDateString('fr', { weekday: 'short' })}
-                      </span>
                     </div>
-                  );
-                })
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-300 italic text-sm">
-                  Pas de données disponibles pour les 7 derniers jours
-                </div>
-              )}
-           </div>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter truncate w-full text-center">
+                      {new Date(day.date).toLocaleDateString('fr', { weekday: 'short' })}
+                    </span>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-300 italic text-sm">
+                Pas de données disponibles pour les 7 derniers jours
+              </div>
+            )}
+          </div>
         </Card>
       </div>
     </div>

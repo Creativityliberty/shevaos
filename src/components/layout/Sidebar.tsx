@@ -61,6 +61,7 @@ const NAV_ITEMS: NavItem[] = [
       { label: "Commandes", href: "/orders" },
       { label: "Relances SAV (Radar)", href: "/sav/follow-ups" },
       { label: "Suivi SAV (Incidents)", href: "/sav" },
+      { label: "Post-Terrain (SAV)", href: "/sav/post-terrain" },
       { label: "Clients (CRM)", href: "/customers" },
     ]
   },
@@ -72,6 +73,7 @@ const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "Dépôts", href: "/finance/deposits" },
       { label: "Dépenses", href: "/finance/expenses" },
+      { label: "Litiges Mission", href: "/finance/disputes" },
       { label: "Comptes & Transferts", href: "/finance/accounts" },
       { label: "Grand Livre", href: "/finance/ledger" },
       { label: "Rapports", href: "/finance/reports" },

@@ -160,6 +160,39 @@ export async function reportDeliveryFailure(
 }
 
 /**
+ * Démarrer une livraison (après chargement Hub)
+ */
+export async function startDelivery(deliveryId: string): Promise<{ success: boolean; message: string; error?: string }> {
+    const supabase = await createClient();
+    try {
+        const { data, error } = await supabase.rpc("start_delivery", { p_delivery_id: deliveryId });
+        if (error) return { success: false, message: error.message };
+        revalidatePath("/driver/deliveries");
+        return { success: data.success, message: "Course démarrée !" };
+    } catch (error: any) {
+        return { success: false, message: error.message };
+    }
+}
+
+/**
+ * Marquer l'arrivée sur zone (capture GPS)
+ */
+export async function markArrived(deliveryId: string, locationGps: string): Promise<{ success: boolean; message: string; error?: string }> {
+    const supabase = await createClient();
+    try {
+        const { data, error } = await supabase.rpc("mark_arrived", { 
+            p_delivery_id: deliveryId, 
+            p_location_gps: locationGps 
+        });
+        if (error) return { success: false, message: error.message };
+        revalidatePath("/driver/deliveries");
+        return { success: data.success, message: "Arrivée enregistrée !" };
+    } catch (error: any) {
+        return { success: false, message: error.message };
+    }
+}
+
+/**
  * Récupérer les livraisons d'un livreur
  */
 export async function getDriverDeliveries() {
