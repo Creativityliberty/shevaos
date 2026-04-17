@@ -139,7 +139,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest pl-2">Fournisseur</label>
-                    <Select value={formData.supplier_id} onValueChange={(val) => setFormData({...formData, supplier_id: val})}>
+                    <Select value={formData.supplier_id} onValueChange={(val: string) => setFormData({...formData, supplier_id: val})}>
                        <SelectTrigger className="h-14 rounded-2xl bg-gray-50/50 border-gray-100 font-bold">
                           <SelectValue placeholder="Choisir..." />
                        </SelectTrigger>
@@ -150,7 +150,7 @@ export function ImportClient({ initialImports, suppliers, transitAgents }: Props
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest pl-2">Agent de Transit</label>
-                    <Select value={formData.transite_agent_id} onValueChange={(val) => setFormData({...formData, transite_agent_id: val})}>
+                    <Select value={formData.transite_agent_id} onValueChange={(val: string) => setFormData({...formData, transite_agent_id: val})}>
                        <SelectTrigger className="h-14 rounded-2xl bg-gray-50/50 border-gray-100 font-bold">
                           <SelectValue placeholder="Choisir..." />
                        </SelectTrigger>

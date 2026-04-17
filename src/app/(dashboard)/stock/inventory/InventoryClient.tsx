@@ -327,7 +327,7 @@ export function InventoryClient({ initialInventory }: Props) {
                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Nature</label>
                      <Select 
                         value={adjData.type} 
-                        onValueChange={(val) => setAdjData({...adjData, type: val})}
+                        onValueChange={(val: string) => setAdjData({...adjData, type: val})}
                      >
                         <SelectTrigger className="h-14 rounded-2xl bg-gray-50/50 border-gray-100 font-bold">
                            <SelectValue />

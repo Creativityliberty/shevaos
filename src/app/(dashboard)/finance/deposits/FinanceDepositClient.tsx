@@ -151,7 +151,7 @@ export function FinanceDepositClient({ deposits, accounts }: { deposits: any[], 
                 <label className="text-xs uppercase font-black text-gray-400 tracking-widest flex items-center gap-2">
                   <Wallet className="w-3 h-3" /> Compte de Trésorerie Cible
                 </label>
-                <Select onValueChange={setSelectedAccountId} value={selectedAccountId}>
+                <Select onValueChange={(val: string) => setSelectedAccountId(val)} value={selectedAccountId}>
                   <SelectTrigger className="h-12 bg-gray-800 border-gray-700 rounded-xl text-white">
                     <SelectValue placeholder="Choisir où déposer l'argent..." />
                   </SelectTrigger>

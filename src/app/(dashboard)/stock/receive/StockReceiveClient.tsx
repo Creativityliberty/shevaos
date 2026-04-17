@@ -107,7 +107,7 @@ export function StockReceiveClient({ products, hubs }: Props) {
             </div>
             <div className="flex-1 space-y-1">
               <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Destination</label>
-              <Select value={selectedHub} onValueChange={(val: any) => setSelectedHub(val ?? "")}>
+              <Select value={selectedHub} onValueChange={(val: string) => setSelectedHub(val ?? "")}>
                 <SelectTrigger className="h-12 rounded-xl border-gray-100 bg-gray-50/50 font-bold focus:ring-primary transition-all">
                   <SelectValue placeholder="Choisir l'entrepôt / Hub" />
                 </SelectTrigger>
@@ -145,7 +145,7 @@ export function StockReceiveClient({ products, hubs }: Props) {
                         <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest pl-1">Produit</label>
                         <Select 
                           value={item.product_id} 
-                          onValueChange={(val: any) => updateItem(index, "product_id", val)}
+                          onValueChange={(val: string) => updateItem(index, "product_id", val)}
                         >
                           <SelectTrigger className="h-11 rounded-xl border-transparent bg-gray-50 focus:bg-white transition-colors font-bold">
                             <SelectValue placeholder="Rechercher un produit..." />
